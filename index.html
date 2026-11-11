@@ -20,6 +20,26 @@ h2{font-size:clamp(27px,3.3vw,38px);letter-spacing:-.055em;font-weight:550;line-
 .test{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}.test summary{color:#c3d3c8;font:11px var(--mono);cursor:pointer;padding:2px 0 12px}.test summary span{color:var(--muted);font-size:10px}.test button{padding:10px 13px;min-height:42px}.test-result{color:var(--muted);font:10px/1.7 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0 0}
 .share{display:grid;grid-template-columns:132px 1fr;align-items:center;gap:26px;border-top:1px solid var(--line);margin-top:38px;padding-top:28px}.share h2{font-size:26px;margin:6px 0}.share p{margin:0 0 7px;font-size:13px}.share a{font:12px var(--mono);overflow-wrap:anywhere}#qr{width:132px;height:132px;background:white;border-radius:8px;padding:6px}#qr svg{display:block;width:120px;height:120px}#qr-status{font:10px var(--mono);margin-top:8px}footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);margin-top:28px;padding-top:18px;color:var(--muted);font:10px/1.6 var(--mono)}footer a{color:var(--muted)}
 @media(max-width:680px){main{padding:20px 16px max(24px,env(safe-area-inset-bottom))}header{padding-bottom:20px}.tag{font-size:9px;letter-spacing:.05em;text-align:right;max-width:130px}.hero{padding-top:28px}h1{font-size:clamp(42px,10vw,64px)}.intro{font-size:14px}.workspace{grid-template-columns:1fr;gap:16px;margin-top:22px}.panel{padding:17px}.share{grid-template-columns:112px 1fr;gap:18px}#qr{width:112px;height:112px}#qr svg{width:100px;height:100px}.share h2{font-size:22px}.share p{font-size:12px}.prediction{min-height:106px}}
+/* Keep the actual top result beside the viewfinder, including on small phones. */
+.camera-prediction{min-height:0;margin:12px 0 16px;padding:12px 14px}
+.camera-prediction h2{font-size:26px;margin:3px 0 6px}
+#camera-panel{scroll-margin-top:max(8px,env(safe-area-inset-top))}
+@media(max-width:680px){
+  .hero{padding:20px 0 0}.hero h1{font-size:34px;margin:8px 0 10px}.hero h1 br{display:none}.hero h1 span:before{content:" "}.hero .intro{font-size:13px;margin-bottom:0}.hero-meta{display:none}
+  body.input-active .hero{display:none}body.input-active .workspace{margin-top:12px}
+  .viewer{width:min(100%,max(160px,calc(100vh - 300px)));width:min(100%,max(160px,calc(100svh - 300px - env(safe-area-inset-top) - env(safe-area-inset-bottom))));margin:12px auto}
+  .empty{padding:16px}.leaf{width:52px;height:52px;font-size:36px;margin-bottom:12px}.empty strong{font-size:15px}.empty p{font-size:12px}
+  .camera-prediction{padding:10px 12px;margin:12px 0}.camera-prediction>.eyebrow:first-child{display:none}.camera-prediction h2{font-size:22px;margin:0 0 5px}.camera-prediction #confidence{display:none}
+  #camera-panel .controls{gap:8px}#camera-panel .controls button,#camera-panel .upload{padding:12px;font-size:12px;min-height:44px}#camera-panel .status{margin-top:12px;min-height:0}
+}
+@media(max-height:500px) and (orientation:landscape){
+  body.input-active main{padding:8px}body.input-active header,body.input-active .hero{display:none}body.input-active .workspace{grid-template-columns:1fr;margin-top:0}
+  body.input-active #camera-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.8fr);gap:10px 16px;padding:12px}
+  body.input-active #camera-panel .panel-header{grid-column:1/-1}body.input-active .viewer{grid-column:1;grid-row:2/5;width:min(100%,calc(100vh - 100px));width:min(100%,calc(100svh - 100px));margin:0 auto}
+  body.input-active .camera-prediction{grid-column:2;grid-row:2;margin:0}body.input-active #camera-panel .controls{grid-column:2;grid-row:3}body.input-active #camera-panel .status{grid-column:2;grid-row:4;margin:0;min-height:0}
+  body.input-active #camera-panel .controls{gap:6px}body.input-active #camera-panel .controls button,body.input-active #camera-panel .upload{padding:10px;font-size:12px;min-height:44px}
+  body.input-active .camera-prediction #confidence{display:none}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
   </style>
 </head>
@@ -33,7 +53,7 @@ h2{font-size:clamp(27px,3.3vw,38px);letter-spacing:-.055em;font-weight:550;line-
     <div class="hero-meta"><span>04 SPECIES</span><span>CAMERA + PHOTO</span><span>LOCAL PROCESSING</span></div>
   </section>
   <div class="workspace">
-    <section class="panel" aria-label="Camera and photo input">
+    <section class="panel" id="camera-panel" aria-label="Camera and photo input">
       <div class="panel-header"><span class="eyebrow">01 / Input feed</span><span class="state" id="source-state">Standby</span></div>
       <div class="viewer">
         <div class="empty" id="placeholder"><div class="leaf" aria-hidden="true">❧</div><strong>Your field of view starts here.</strong><p>Open the rear camera or choose a photo. Keep one leaf centred in the frame.</p></div>
@@ -41,6 +61,7 @@ h2{font-size:clamp(27px,3.3vw,38px);letter-spacing:-.055em;font-weight:550;line-
         <img id="photo" alt="The selected leaf; the central square is classified" hidden>
         <div class="guide" id="guide" hidden></div>
       </div>
+      <div class="prediction camera-prediction" aria-label="Current top prediction"><span class="eyebrow">Top match</span><h2 id="winner">Waiting for a leaf</h2><span id="timing" class="eyebrow">All four classes · live probabilities</span><p id="confidence" style="font-size:12px;margin:8px 0 0"></p></div>
       <div class="controls">
         <button id="camera" class="primary" disabled>Start rear camera</button>
         <button id="stop" hidden>Stop camera</button>
@@ -50,7 +71,6 @@ h2{font-size:clamp(27px,3.3vw,38px);letter-spacing:-.055em;font-weight:550;line-
     </section>
     <section class="panel" aria-label="Classification probabilities">
       <div class="panel-header"><span class="eyebrow">02 / Model output</span><span class="state" id="model-state">Loading</span></div>
-      <div class="prediction"><span class="eyebrow">Top match</span><h2 id="winner">Waiting for a leaf</h2><span id="timing" class="eyebrow">All four classes · live probabilities</span><p id="confidence" style="font-size:12px;margin:8px 0 0"></p></div>
       <div id="results"></div>
       <p class="note">Only the central square is analysed. Images stay on your device. The model knows four classes. A low-confidence flag suggests trying another view; an unfamiliar species can still receive a high score. <a href="https://github.com/kafcoo/mlr-ex08/blob/main/NETWORK_RESULTS.md">Training comparison</a></p>
       <details class="test" id="diagnostics"><summary>Reference &amp; diagnostics</summary><button id="check" disabled>Check reference image</button><pre id="test-result" class="test-result" aria-live="polite">Compare the supplied photo against its expected probabilities.</pre></details>
@@ -81,13 +101,19 @@ function stopCamera() {
   generation++; clearTimeout(timer);
   if(stream) stream.getTracks().forEach(track=>track.stop());
   stream=null; video.pause(); video.srcObject=null;
+  document.body.classList.remove('input-active');
   $('source-state').textContent='Standby';$('source-state').dataset.state='';
   $('stop').hidden=true; $('camera').textContent='Start rear camera';
 }
 function showSource(source) {
   $('placeholder').hidden=true; video.hidden=source!==video;
   photo.hidden=source!==photo; $('guide').hidden=source!==video;
+  document.body.classList.add('input-active');
   $('source-state').textContent=source===video?'Live camera':'Photo';$('source-state').dataset.state='ready';
+}
+function focusInput(token) {
+  if(!matchMedia('(max-width:680px), (max-height:500px)').matches) return;
+  requestAnimationFrame(()=>{if(token===generation) $('camera-panel').scrollIntoView({block:'start',behavior:'auto'});});
 }
 function preprocess(source) {
   const w=source.videoWidth || source.naturalWidth || source.width, h=source.videoHeight || source.naturalHeight || source.height;
@@ -157,6 +183,7 @@ $('camera').addEventListener('click',async()=>{
     await video.play();
     if(token!==generation) return;
     $('stop').hidden=false; $('camera').textContent='Restart camera';
+    focusInput(token);
     status('Camera live · centre a leaf in the square.'); live(token);
   } catch(error) { if(token===generation) {stopCamera();status('Could not start the camera: '+error.message+'. Allow camera access in Safari settings or choose a photo.',true);} }
   finally {$('camera').disabled=false;}
@@ -197,7 +224,7 @@ async function showPhoto(url,token) {
 $('upload').addEventListener('change',async event=>{
   const file=event.target.files[0]; if(!file) return;
   stopCamera(); const token=generation, url=URL.createObjectURL(file);
-  try {status('Analysing your photo…');if(await showPhoto(url,token)) status('Photo analysed · central square crop.');}
+  try {status('Analysing your photo…');if(await showPhoto(url,token)) {status('Photo analysed · central square crop.');focusInput(token);}}
   catch(error) {if(token===generation) status(error.message,true);}
   finally {URL.revokeObjectURL(url);event.target.value='';}
 });
@@ -217,6 +244,11 @@ $('check').addEventListener('click',async()=>{
     status(passed&&threeDecimalsMatch?'Reference check passed. Ready for your next leaf.':'Reference check failed. See the comparison below.',!passed||!threeDecimalsMatch);
   } catch(error) {if(token===generation) {$('test-result').textContent='Reference check failed: '+error.message;status(error.message,true);}}
   finally {$('check').disabled=false;}
+});
+let viewportWidth=innerWidth;
+window.addEventListener('resize',()=>{
+  if(innerWidth!==viewportWidth && document.body.classList.contains('input-active')) focusInput(generation);
+  viewportWidth=innerWidth;
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden && stream) {stopCamera();status('Camera stopped while the page is in the background. Tap Start rear camera to resume.');}});
 window.addEventListener('pagehide',stopCamera);

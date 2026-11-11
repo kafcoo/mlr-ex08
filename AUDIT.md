@@ -49,6 +49,8 @@ BN pomohl vlastní síti. GAP šetří velikost, ale zde zhoršil skóre. Frozen
 
 ## Co zbývá skutečně ověřit
 
+Uživatel nově potvrdil používání iPhonu 13 mini a nahlásil nepoužitelné oddělení kamery a vítězné třídy. Hlavní výsledek je nyní přímo pod hledáčkem, mobilní úvod se při práci skryje a hledáček respektuje výšku viewportu/safe areas. Automatické [layout kontroly](training/results/mobile_layout_checks.json) prošly; zbývá potvrdit opravu na jeho skutečném telefonu. Jde o ergonomii, ne o změnu accuracy. Funkce je uvedená také v návrzích reportu a review.
+
 - Telefon/OS, zadní kameru, zastavení/obnovení, upload, světlo, různé listy a pozadí; skutečný screenshot bez soukromých údajů.
 - Referenční JPEG na vlastním telefonu a jeho čtyři hodnoty vedle `check_expected.json`. Numerický PASS neznamená jistotu identifikace listu; současná reference může mít hlášku Uncertain.
 - Aktuální model i v [kurzové aplikaci](https://tomasvicar.github.io/MLR-public/apps/classifier/). Ta má vlastní JPEG kód; naše oprava mění vlastní web. Pro izolaci jejího dekódování lze použít diagnostickou PNG referenci.

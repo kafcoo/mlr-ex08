@@ -5,7 +5,7 @@
 ## 1. Funguje kamera na telefonu?
 
 - URL: https://kafcoo.github.io/mlr-ex08/
-- **DOPLNIT:** telefon/OS, spuštění zadní kamery, povolení, reakce na list, zastavení a opětovné spuštění.
+- Telefon je podle uživatele **iPhone 13 mini**. **DOPLNIT:** OS, spuštění zadní kamery, povolení, reakce na list, zastavení a opětovné spuštění.
 - **DOPLNIT skutečný screenshot telefonu**, ne obrázek z emulovaného desktopového WebKitu.
 - Agent ověřil Chrome se simulovaným živým streamem a WebKit s fotografiemi; to nenahrazuje moje telefonní pozorování.
 
@@ -35,3 +35,14 @@
 Pro report je připraveno 12 původních a 21 nových běhů. Nejvíc pomohla další data. ColorJitter neměl jednoznačný přínos. Nově pomohl BatchNorm vlastní síti; GAP šetřil velikost za cenu skóre. Předtrénovaný MobileNet byl přesnější, frozen-head varianta levnější na trénování, cosine měl menší a smoothing větší validační přínos. Přesná čísla a omezení jsou v REPORT_DRAFT.md a NETWORK_RESULTS.md; dev skóre nepovažuj za telefonní accuracy.
 
 Finální REVIEW.md vytvoř až po svém ověření a přidej screenshot do veřejného repozitáře bez soukromých údajů. Deadline je 48 hodin od cvičení podle pokynů vyučujícího.
+
+
+## Zlepšení použitelnosti: výsledek přímo u hledáčku
+
+Uživatel při skutečném používání na **iPhonu 13 mini** upozornil, že pro přečtení vítězné třídy musel odscrollovat od kamery, a tím ztrácel přehled o záběru. Hlavní výsledek jsme proto přesunuli přímo pod hledáček: jméno nejvýše skórující třídy, procentní skóre a označení nejistoty se aktualizují společně s původními čtyřmi pravděpodobnostmi.
+
+Mobilní režim po spuštění kamery nebo výběru fotografie skryje velký úvod a přesune pohled na vstupní panel. Čtvercový hledáček se vejde do dostupné výšky pomocí svh a safe-area insets, ovládání zachovává dotykové cíle a při otočení telefonu se rozložení přizpůsobí. Podrobné pravděpodobnosti a diagnostika zůstaly níže.
+
+WebKit a Chrome prošly kontrolou rozměrů 375 × 812, 375 × 650, 375 × 600 a landscape 812 × 375; test ověřuje současnou viditelnost hledáčku, vítězné třídy a ovládání, přepínání vítěze i skutečně běžící simulovaný stream v Chrome. [Záznam](training/results/mobile_layout_checks.json). To není fyzické potvrzení opravy na telefonu: **DOPLNIT vlastní ověření nového rozložení a screenshot na iPhonu 13 mini**.
+
+Jde o zlepšení použitelnosti, nikoli přesnosti. Síť, váhy, preprocessing a vypočtená skóre se touto úpravou nemění.

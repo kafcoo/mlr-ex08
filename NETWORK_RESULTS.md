@@ -58,3 +58,14 @@ python training/export_model.py --run-dir training/runs/networks_v1 --output-dir
 ```
 
 Pro čerstvou reprodukci použij nový run-dir. Původní baseline této studie lze obnovit z commitu `0303611e72702491b5e38114620f30c72a9ea7c5`. Checkpointy nejsou publikované; samotné veřejné JSONy trénink nenahrazují. MPS nemusí být bitově reprodukovatelné na jiném hardware. Automatické technické podklady: [návrh reportu](REPORT_DRAFT.md), [návrh review](REVIEW_DRAFT.md), [aktuální model](release_info.json).
+
+
+## Zlepšení použitelnosti: výsledek přímo u hledáčku
+
+Uživatel při skutečném používání na **iPhonu 13 mini** upozornil, že pro přečtení vítězné třídy musel odscrollovat od kamery, a tím ztrácel přehled o záběru. Hlavní výsledek jsme proto přesunuli přímo pod hledáček: jméno nejvýše skórující třídy, procentní skóre a označení nejistoty se aktualizují společně s původními čtyřmi pravděpodobnostmi.
+
+Mobilní režim po spuštění kamery nebo výběru fotografie skryje velký úvod a přesune pohled na vstupní panel. Čtvercový hledáček se vejde do dostupné výšky pomocí svh a safe-area insets, ovládání zachovává dotykové cíle a při otočení telefonu se rozložení přizpůsobí. Podrobné pravděpodobnosti a diagnostika zůstaly níže.
+
+WebKit a Chrome prošly kontrolou rozměrů 375 × 812, 375 × 650, 375 × 600 a landscape 812 × 375; test ověřuje současnou viditelnost hledáčku, vítězné třídy a ovládání, přepínání vítěze i skutečně běžící simulovaný stream v Chrome. [Záznam](training/results/mobile_layout_checks.json). To není fyzické potvrzení opravy na telefonu: **DOPLNIT vlastní ověření nového rozložení a screenshot na iPhonu 13 mini**.
+
+Jde o zlepšení použitelnosti, nikoli přesnosti. Síť, váhy, preprocessing a vypočtená skóre se touto úpravou nemění.

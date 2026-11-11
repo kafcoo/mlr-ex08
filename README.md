@@ -20,6 +20,8 @@ Seven new variants were trained on identical data for 15 epochs: Task 3 LeafNet,
 
 Open the HTTPS link in Safari on iPhone, tap **Start rear camera**, allow access and centre one leaf. **Choose photo** is the fallback. The camera stops in the background; tap Start to resume.
 
+The winning class, its model score and uncertainty flag sit **directly below the viewfinder**. On small phones, starting the camera or choosing a photo enters a compact input view and scrolls to it once. The square preview scales with the available viewport height and safe areas, so the frame, top result and controls can be seen together. This addresses user-reported scrolling problems on iPhone 13 mini. [Layout tests](training/results/mobile_layout_checks.json) cover portrait with reduced Safari-sized heights and landscape; confirmation on the user's physical phone is pending. It is a usability improvement, with no model or accuracy change.
+
 [model_info.json](model_info.json) defines classes `apple, cherry, chestnut, maple`, size **96**, mean `[0.485,0.456,0.406]` and std `[0.229,0.224,0.225]`. The page crops the central square, resizes it to 96 × 96, divides RGB by 255 and standardizes each channel. Contiguous R/G/B planes form **[1,3,96,96] float32**. Stable softmax converts logits to probabilities. Metadata is also embedded in [leaf_model.onnx](leaf_model.onnx), as in Task 2e.
 
 The uncertain flag uses top probability below 0.65 or top-two margin below 0.15. It is a heuristic, not a trained unknown class or calibrated confidence. The supplied reference is ambiguous for the new model: a numerical check may PASS while the display correctly says Uncertain.

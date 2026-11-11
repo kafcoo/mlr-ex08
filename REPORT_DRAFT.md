@@ -46,7 +46,7 @@ Podle předem popsaného dev pravidla jsme zvolili MobileNetV3-small + geometric
 
 ## Telefonní zkouška — DOPLNIT STUDENTEM
 
-- Telefon a verze Safari/OS: **DOPLNIT**.
+- Telefon: **iPhone 13 mini** (uvedl uživatel); verze Safari/OS: **DOPLNIT**.
 - Datum, druhy listů, počet odlišných listů a světelné podmínky: **DOPLNIT**.
 - Výsledek skutečné zadní kamery, nejčastější chyby a praktické zpoždění: **DOPLNIT**.
 - Ověření vlastního ONNX v kurzové aplikaci na telefonu: **DOPLNIT**.
@@ -55,3 +55,14 @@ Podle předem popsaného dev pravidla jsme zvolili MobileNetV3-small + geometric
 Pro příští potvrzení bych odložil novou telefonní sadu podle listu/rostliny a session. Historický test už je známý. Další změny bych zaváděl odděleně a nejdříve měřil přínos proti současnému dev baseline, ne přidával současně více optimalizací.
 
 Podrobné metriky, grafy a protokol: [NETWORK_RESULTS.md](NETWORK_RESULTS.md) a [TRAINING_RESULTS.md](TRAINING_RESULTS.md). Před odevzdáním text vlastními slovy zkrať a zkontroluj, že odpovídá tomu, co umíš vysvětlit.
+
+
+## Zlepšení použitelnosti: výsledek přímo u hledáčku
+
+Uživatel při skutečném používání na **iPhonu 13 mini** upozornil, že pro přečtení vítězné třídy musel odscrollovat od kamery, a tím ztrácel přehled o záběru. Hlavní výsledek jsme proto přesunuli přímo pod hledáček: jméno nejvýše skórující třídy, procentní skóre a označení nejistoty se aktualizují společně s původními čtyřmi pravděpodobnostmi.
+
+Mobilní režim po spuštění kamery nebo výběru fotografie skryje velký úvod a přesune pohled na vstupní panel. Čtvercový hledáček se vejde do dostupné výšky pomocí svh a safe-area insets, ovládání zachovává dotykové cíle a při otočení telefonu se rozložení přizpůsobí. Podrobné pravděpodobnosti a diagnostika zůstaly níže.
+
+WebKit a Chrome prošly kontrolou rozměrů 375 × 812, 375 × 650, 375 × 600 a landscape 812 × 375; test ověřuje současnou viditelnost hledáčku, vítězné třídy a ovládání, přepínání vítěze i skutečně běžící simulovaný stream v Chrome. [Záznam](training/results/mobile_layout_checks.json). To není fyzické potvrzení opravy na telefonu: **DOPLNIT vlastní ověření nového rozložení a screenshot na iPhonu 13 mini**.
+
+Jde o zlepšení použitelnosti, nikoli přesnosti. Síť, váhy, preprocessing a vypočtená skóre se touto úpravou nemění.
