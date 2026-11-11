@@ -36,9 +36,9 @@
     </section>
     <section class="panel" aria-label="Classification probabilities">
       <span class="eyebrow">02 / Identify</span>
-      <div class="prediction"><h2 id="winner">Waiting for a leaf</h2><span id="timing" class="eyebrow">All four classes · live probabilities</span></div>
+      <div class="prediction"><h2 id="winner">Waiting for a leaf</h2><span id="timing" class="eyebrow">All four classes · live probabilities</span><p id="confidence" style="font-size:13px;margin:6px 0 0"></p></div>
       <div id="results"></div>
-      <p class="note">Only the central square is analysed. Images stay on your device. These are model estimates; the model always chooses among its four known classes.</p>
+      <p class="note">Only the central square is analysed. Images stay on your device. The model knows four classes. A low-confidence flag suggests trying another view; an unfamiliar species can still receive a high score. <a href="https://github.com/kafcoo/mlr-ex08/blob/main/TRAINING_RESULTS.md">Training comparison</a></p>
       <div class="test"><button id="check" disabled>Check reference image</button><pre id="test-result" class="test-result" aria-live="polite">Compare the supplied photo against its expected probabilities.</pre></div>
     </section>
   </div>
@@ -103,7 +103,10 @@ async function classify(source) {
 function render(probabilities, milliseconds) {
   lastProbabilities=probabilities;
   const best=probabilities.indexOf(Math.max(...probabilities));
-  $('winner').textContent=info.classes[best][0].toUpperCase()+info.classes[best].slice(1);
+  const sorted=[...probabilities].sort((a,b)=>b-a);
+  const uncertain=sorted[0]<0.65 || sorted[0]-sorted[1]<0.15;
+  $('winner').textContent=(uncertain?'Uncertain · ':'')+info.classes[best][0].toUpperCase()+info.classes[best].slice(1);
+  $('confidence').textContent=uncertain?'Try another angle or move closer to a single leaf.':'';
   $('timing').textContent=`${(probabilities[best]*100).toFixed(2)}% probability · ${Math.round(milliseconds)} ms`;
   probabilities.forEach((p,i)=>{
     const row=$('class-'+i); row.classList.toggle('best',i===best);
@@ -162,8 +165,9 @@ $('check').addEventListener('click',async()=>{
     status('Checking the supplied reference image…');
     const expected=await json('check_expected.json');
     const actual=await showPhoto('check_image.jpg',token);if(!actual) return;
-    // Canvas/JPEG decoders and resize filters can differ slightly from Pillow.
-    const tolerance=0.0005;
+    // Native JPEG decoding differs between Safari and Pillow. Same-RGB tests
+    // match within 1e-5; this JPEG-aware bound is 0.2 percentage points.
+    const tolerance=0.002;
     const errors=actual.map((p,i)=>Math.abs(p-expected[info.classes[i]]));
     const passed=errors.every(e=>Number.isFinite(e)&&e<=tolerance);
     lastReferenceCheck={passed,tolerance,actual:Object.fromEntries(info.classes.map((name,i)=>[name,actual[i]])),expected,maxAbsoluteError:Math.max(...errors)};

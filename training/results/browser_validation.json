@@ -1,0 +1,120 @@
+{
+  "scope": "local preview, same application files",
+  "date": "2026-11-11",
+  "samePixelTolerance": 0.00001,
+  "nativeJpegTolerance": 0.002,
+  "browsers": [
+    {
+      "name": "webkit",
+      "browser": "webkit",
+      "url": "http://127.0.0.1:8080/",
+      "reference": {
+        "passed": true,
+        "tolerance": 0.002,
+        "actual": {
+          "apple": 0.8114405950745149,
+          "cherry": 0.12568795621031997,
+          "chestnut": 0.02289183613229687,
+          "maple": 0.03997961258286811
+        },
+        "expected": {
+          "apple": 0.8102642297744751,
+          "cherry": 0.12601445615291595,
+          "chestnut": 0.02314717508852482,
+          "maple": 0.04057416692376137
+        },
+        "maxAbsoluteError": 0.0011763653000398389
+      },
+      "decodedQR": "https://kafcoo.github.io/mlr-ex08/",
+      "decoderIsolation": {
+        "expected": {
+          "apple": 0.8102642297744751,
+          "cherry": 0.12601445615291595,
+          "chestnut": 0.02314717508852482,
+          "maple": 0.04057416692376137
+        },
+        "pixels": [
+          0.8102639803186378,
+          0.12601459519230426,
+          0.023147193366915814,
+          0.04057423112214213
+        ],
+        "jpeg": [
+          0.8114405950745149,
+          0.12568795621031997,
+          0.02289183613229687,
+          0.03997961258286811
+        ],
+        "pixelError": 2.4945583732005616e-7,
+        "jpegError": 0.0011763653000398389
+      },
+      "checks": {
+        "referenceJpeg": true,
+        "fileUpload": true,
+        "normalizationAndNCHW": true,
+        "centralCrop": true,
+        "uncertaintyDisplay": true,
+        "qrDecodedAndMatched": true,
+        "cameraDeniedFallback": true,
+        "responsiveLayout": true,
+        "liveCameraLoop": "physical camera unavailable"
+      }
+    },
+    {
+      "name": "chromium",
+      "browser": "chromium",
+      "url": "http://127.0.0.1:8080/",
+      "reference": {
+        "passed": true,
+        "tolerance": 0.002,
+        "actual": {
+          "apple": 0.8102639803186378,
+          "cherry": 0.12601459519230426,
+          "chestnut": 0.023147193366915814,
+          "maple": 0.04057423112214213
+        },
+        "expected": {
+          "apple": 0.8102642297744751,
+          "cherry": 0.12601445615291595,
+          "chestnut": 0.02314717508852482,
+          "maple": 0.04057416692376137
+        },
+        "maxAbsoluteError": 2.4945583732005616e-7
+      },
+      "decodedQR": "https://kafcoo.github.io/mlr-ex08/",
+      "decoderIsolation": {
+        "expected": {
+          "apple": 0.8102642297744751,
+          "cherry": 0.12601445615291595,
+          "chestnut": 0.02314717508852482,
+          "maple": 0.04057416692376137
+        },
+        "pixels": [
+          0.8102639803186378,
+          0.12601459519230426,
+          0.023147193366915814,
+          0.04057423112214213
+        ],
+        "jpeg": [
+          0.8102639803186378,
+          0.12601459519230426,
+          0.023147193366915814,
+          0.04057423112214213
+        ],
+        "pixelError": 2.4945583732005616e-7,
+        "jpegError": 2.4945583732005616e-7
+      },
+      "checks": {
+        "referenceJpeg": true,
+        "fileUpload": true,
+        "normalizationAndNCHW": true,
+        "centralCrop": true,
+        "uncertaintyDisplay": true,
+        "qrDecodedAndMatched": true,
+        "cameraDeniedFallback": true,
+        "responsiveLayout": true,
+        "liveCameraLoop": "simulated stream passed"
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "criterion": "mean of four development balanced accuracies; variant mean over seeds; median seed",
+  "baseline_dev_score": 0.5735491216182709,
+  "variant_summaries": [
+    {
+      "variant": "expanded_color",
+      "mean_dev_score": 0.805832510193189,
+      "std_dev_score": 0.01645830511410587,
+      "seeds": 3
+    },
+    {
+      "variant": "expanded_geo",
+      "mean_dev_score": 0.8035342295964559,
+      "std_dev_score": 0.008023351549288791,
+      "seeds": 3
+    },
+    {
+      "variant": "expanded_only",
+      "mean_dev_score": 0.7830357154210409,
+      "std_dev_score": 0.015525895754509397,
+      "seeds": 3
+    },
+    {
+      "variant": "original_only",
+      "mean_dev_score": 0.5700810278455416,
+      "std_dev_score": 0.02582865221939482,
+      "seeds": 3
+    }
+  ],
+  "selected_variant": "expanded_color",
+  "selected_seed": 2,
+  "selected_checkpoint": "expanded_color_seed2.pt",
+  "deploy_candidate": true,
+  "baseline_sha256": "ae31c68aa9920808565fed2eaf50164647f90887b396a9fafe02fb9e4f034f7f"
+}

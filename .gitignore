@@ -5,3 +5,6 @@ data/
 *.zip
 *.pt
 *.ipynb
+.venv/
+__pycache__/
+training/checkpoints/
