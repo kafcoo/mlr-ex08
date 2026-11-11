@@ -22,14 +22,18 @@ ONNX Runtime Web **1.20.1** loads from jsDelivr. Single-threaded WebAssembly avo
 
 Tap **Check reference image** to classify [check_image.jpg](check_image.jpg) and compare every output against [check_expected.json](check_expected.json). The page shows actual and expected probabilities, the maximum absolute error, and a PASS/FAIL result. It uses an absolute tolerance of **0.0005** per probability to allow small browser JPEG-decoder and floating-point differences. This is 0.05 percentage points, not 0.05 probability.
 
-The supplied image is already 96 × 96. A browser reference run produced:
+The supplied image is already 96 × 96. Browser reference runs produced:
 
-| Class | Browser probability | Expected probability |
-| --- | ---: | ---: |
-| apple | 0.00122140 | 0.001221379498 |
-| cherry | 0.99863268 | 0.998632729053 |
-| chestnut | 0.00013527 | 0.000135266993 |
-| maple | 0.00001065 | 0.000010653736 |
+| Class | Chrome probability | WebKit probability | Expected probability |
+| --- | ---: | ---: | ---: |
+| apple | 0.00122140 | 0.00126066 | 0.001221379498 |
+| cherry | 0.99863268 | 0.99860080 | 0.998632729053 |
+| chestnut | 0.00013527 | 0.00012885 | 0.000135266993 |
+| maple | 0.00001065 | 0.00000970 | 0.000010653736 |
+
+Maximum absolute errors were **4.85 × 10⁻⁸** in Chrome and **3.93 × 10⁻⁵** in WebKit, both below the tolerance. Both the reference button and actual file upload were checked. Exact binary equality across browser image decoders is not expected.
+
+Automated checks used Playwright WebKit with an iPhone 13 viewport and Chrome. They verified RGB channel order and normalization, central-square cropping, NCHW dimensions, all four probabilities, photo upload, camera-denial fallback and responsive layout. A simulated camera stream in Chrome verified repeated inference, the rear-camera preference and stopping camera tracks. The rendered QR code was independently decoded with `jsQR`. A physical iPhone camera was not available for testing.
 
 The model always predicts among its four known classes, even for an unrelated image; probabilities are not a guarantee of identification.
 
