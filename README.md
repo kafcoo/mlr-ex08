@@ -36,7 +36,9 @@ ONNX Runtime Web **1.20.1**, QR generator **1.4.4**, and the optional JPEG codec
 
 ## Notebook and checks
 
-The user-authorized corrections are minimal: Task 3d uses `aug_train_loader`; train loaders use fixed generators; the custom dataset filters image extensions. Task 2 writes safely into `exports/task2/`. The original notebook has a local backup. The corrected local notebook has fresh outputs from **29/29 code cells and 14/14 semantic checks**.
+The user-authorized corrections are minimal: Task 3d uses `aug_train_loader`; train loaders use fixed generators; the custom dataset filters image extensions. Task 2 writes safely into `exports/task2/`. The original notebook has a local backup. The corrected local notebook has fresh outputs from **30/30 code cells and 15/15 semantic checks**.
+
+A separate read-only Task 4 cell loads the currently released PyTorch checkpoint and checks its reference probabilities against the website files, keeping it distinct from the original Task 2 demonstration model. Graphs and the confusion matrix are embedded in the executed notebook.
 
 - [Notebook execution](training/results/notebook_audit.json)
 - [Original study/current export integrity](training/results/integrity_checks.json)

@@ -6,7 +6,7 @@ Aktualizováno 11. 11. 2026 po výslovném souhlasu uživatele s opravou noteboo
 
 | Oblast | Stav a důkaz |
 | --- | --- |
-| Opravený notebook | 29/29 kódových buněk bez chyby, 14/14 věcných kontrol. Čerstvé výstupy v lokálním `ex08_student.ipynb`; [záznam](training/results/notebook_audit.json). |
+| Opravený notebook | 30/30 kódových buněk bez chyby, 15/15 věcných kontrol. Čerstvé výstupy v lokálním `ex08_student.ipynb`; [záznam](training/results/notebook_audit.json). |
 | Task 3d | Smyčka i jmenovatel výpisu používají `aug_train_loader`; skutečně se trénuje augmentace + BN. |
 | Reprodukovatelnost Task 3 | Vlastní seedované generátory shuffle, filtr přípon obrázků, zachovaná původní záloha. |
 | Task 2 export | Model, JSONy, reference a ZIP se ukládají do `exports/task2/`, ne přes vydaný root model. |
@@ -27,6 +27,7 @@ Aktualizováno 11. 11. 2026 po výslovném souhlasu uživatele s opravou noteboo
 3. Task 3d skutečně používá augmentovaný loader. U dokončeného kódu byly odstraněny zbylé TODO/PLACEHOLDER komentáře.
 4. Task 2e/f zapisuje do `exports/task2/`; ZIP obsahuje čtyři jednoduché názvy souborů.
 5. Task 4 má rozcestník k novým výsledkům a návrhům. Run All automaticky nespouští novou 21běhovou studii.
+6. Samostatná Task 4 buňka pouze načte aktuální vybraný PyTorch checkpoint a ověří jeho pravděpodobnosti proti souborům webu. Tím se nepletou hodnoty původního Task 2 modelu s novým modelem. Grafy a confusion matrix jsou vložené ve vykonaném notebooku.
 
 Staré výsledky Task 3d nepoužívej jako měření „augmentace + BN“. Nové výstupy jsou získané skutečnou augmentací. Jedna chyba původní validace má 3,45 procentního bodu, takže jeden běh není silný statistický důkaz.
 

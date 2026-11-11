@@ -93,7 +93,7 @@ MobileNet ponechává rozumný přibližně 6,1MB soubor a ve zdejším desktopo
 
 ## Notebook a JPEG
 
-Uživatelem schválená oprava Task 3d používá `aug_train_loader`, oba train loadery mají vlastní pevný generátor a vlastní Dataset filtruje obrázkové přípony. Modely z Task 3 jsou v [networks.py](training/networks.py) přímo a čitelně zkopírované; [behaviorální kontrola](training/runs/networks_v1/results/network_checks.json) porovnává jejich výstupy se skutečnými třídami z notebooku. Původní notebook je lokálně zálohován. Opravený notebook prošel 29/29 buňkami a 14/14 věcnými kontrolami; Task 2 export je oddělen do `exports/task2/`.
+Uživatelem schválená oprava Task 3d používá `aug_train_loader`, oba train loadery mají vlastní pevný generátor a vlastní Dataset filtruje obrázkové přípony. Modely z Task 3 jsou v [networks.py](training/networks.py) přímo a čitelně zkopírované; [behaviorální kontrola](training/runs/networks_v1/results/network_checks.json) porovnává jejich výstupy se skutečnými třídami z notebooku. Původní notebook je lokálně zálohován. Opravený notebook prošel 30/30 buňkami a 15/15 věcnými kontrolami; Task 2 export je oddělen do `exports/task2/`.
 
 JPEG fotografie dekóduje jednotný lokální WASM [jSquash/MozJPEG](https://github.com/jamsinclair/jSquash/tree/main/packages/jpeg) verze 1.6.0. Původní JPEG a referenční pixely se nemění; nepoužíváme browser-specifické očekávané hodnoty. Reference prošla přísnou tolerancí 1e-5 a shodou na tři desetinná místa ve WebKitu i Chrome. Všech osm EXIF orientací navíc dává přesné stejné pixely jako Pillow + exif_transpose. Kamera tuto JPEG větev nepotřebuje. Knihovna i její WASM se načítají z CDN; samotné fotografie se nikam neposílají.
 

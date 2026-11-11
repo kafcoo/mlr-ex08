@@ -59,7 +59,7 @@ The integrity checks need local original/clean data and the current root export 
 
 ## Notebook, JPEG and student work
 
-The user-authorized corrected notebook uses the augmented loader, seeded shuffle and filtered image extensions. It passed 29/29 cells and 14/14 semantic checks. Its original version is backed up locally. Task 2 exports into `exports/task2/`; the original archived notebook would overwrite root exports, so audits continue to run in an isolated working directory.
+The user-authorized corrected notebook uses the augmented loader, seeded shuffle and filtered image extensions. It passed 30/30 cells and 15/15 semantic checks. Its original version is backed up locally. Task 2 exports into `exports/task2/`; the original archived notebook would overwrite root exports, so audits continue to run in an isolated working directory.
 
 The page uses one pinned MozJPEG/WASM decoder for JPEG uploads, including EXIF rotation/mirroring. The unchanged reference passes strict 1e-5 probability tolerance and three-decimal agreement in both WebKit and Chrome; all eight EXIF orientations match Pillow pixels. Camera frames are already decoded. The extra library/WASM downloads from the CDN, but photos remain on the device.
 
