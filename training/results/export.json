@@ -1,8 +1,8 @@
 {
   "variant": "expanded_color",
   "seed": 2,
-  "model_sha256": "be7438c7711112b3732ac8c74635ff27ac27052ef702ad634088131833685cfe",
-  "model_bytes": 6097434,
+  "model_sha256": "22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a",
+  "model_bytes": 6097584,
   "opset": 17,
   "max_logit_error": 1.9788742065429688e-05,
   "reference_probabilities": {

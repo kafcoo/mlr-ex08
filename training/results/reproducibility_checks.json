@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Fresh run writes real checkpoint, metric and data/config fingerprint",
+    "Matching checkpoint/protocol safely resumes without overwriting",
+    "Published metrics without weights do not skip required training",
+    "Changed epoch/config is rejected in an existing experiment directory",
+    "Missing or wrong baseline cannot silently substitute the deployed model",
+    "Unknown variant names are rejected rather than mislabelled",
+    "Archived 12-run results are protected from accidental overwrite"
+  ],
+  "scope": "temporary 1-epoch CPU runs; original measurements preserved"
+}

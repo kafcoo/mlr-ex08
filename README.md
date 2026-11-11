@@ -2,6 +2,8 @@
 
 **Open the app: https://kafcoo.github.io/mlr-ex08/**
 
+**Requirement review:** [AUDIT.md](AUDIT.md) records the notebook checks, fixes, outstanding hand-in requirements and the next experiment plan. This technical project still needs the student's own `REVIEW.md`, `REPORT.md` and a real phone screenshot.
+
 A single-page, plain JavaScript leaf classifier using an ONNX MobileNetV3-small model. Open the HTTPS link in Safari on an iPhone, tap **Start rear camera**, allow camera access, and hold a leaf in the centre of the square preview. Probabilities for apple, cherry, chestnut and maple update continuously. **Choose photo** provides a fallback. The camera stops when the page goes into the background; tap Start rear camera to resume.
 
 ## Improved model
@@ -28,7 +30,7 @@ The labelled QR code at the bottom is generated in the browser with `qrcode-gene
 4. Creates a float32 tensor with shape **[1, 3, 96, 96]**, with contiguous R, G and B planes (NCHW).
 5. Runs the model and applies numerically stable softmax to its four output logits, preserving metadata class order.
 
-ONNX Runtime Web **1.20.1** loads from jsDelivr. Single-threaded WebAssembly avoids requiring cross-origin isolation or SharedArrayBuffer on GitHub Pages. Inline, muted video, a user-initiated request and the `environment` facing-mode preference support Safari on iPhone. The QR library is also version-pinned. An internet connection is needed to load CDN dependencies and the model initially. The model uses ONNX opset **17** and is **6,097,434 bytes**.
+ONNX Runtime Web **1.20.1** loads from jsDelivr. Single-threaded WebAssembly avoids requiring cross-origin isolation or SharedArrayBuffer on GitHub Pages. Inline, muted video, a user-initiated request and the `environment` facing-mode preference support Safari on iPhone. The QR library is also version-pinned. An internet connection is needed to load CDN dependencies and the model initially. The model uses ONNX opset **17**, includes embedded `model_info` metadata as in Task 2e, and is **6,097,584 bytes**. The dark technical interface uses inline CSS and system fonts; no UI framework or additional asset service is needed.
 
 ## Reference check and browser verification
 
@@ -45,7 +47,11 @@ The reference JPEG is unchanged. Its expected probabilities were regenerated fro
 
 Maximum native-JPEG absolute errors were **2.49e-07** in Chrome and **0.00118** in WebKit. Safari decodes the JPEG into slightly different RGB pixels than Pillow/Chrome. When both browsers receive exactly the same decoded RGB pixels as PyTorch, their probability error is just **2.50 × 10⁻⁷**. This isolates the larger WebKit difference to JPEG decoding. Both the reference button and actual file upload were checked. See [browser validation measurements](training/results/browser_validation.json).
 
+**Three-decimal agreement is a separate requirement:** Chrome passes; WebKit currently differs (for example apple rounds to 0.811 rather than 0.810). The app shows this separately from its JPEG tolerance result. Do not interpret the tolerance PASS as satisfying the notebook's three-decimal check. See the [audit](AUDIT.md) for the remaining verification and reporting steps.
+
 Automated checks used Playwright WebKit with an iPhone 13 viewport and Chrome. They verified RGB channel order and normalization, central-square cropping, NCHW dimensions, all four probabilities, photo upload, camera-denial fallback and responsive layout. A simulated camera stream in Chrome verified repeated inference, the rear-camera preference and camera-track cleanup. The rendered QR was independently decoded with `jsQR` and matched the public app URL. A physical iPhone camera was not available for testing.
+
+The original notebook was also executed unchanged in an isolated working directory: **29/29 code cells ran without runtime errors**. Of 14 additional semantic checks, 13 passed; the Task 3d augmented-loader check correctly identified the notebook defect. [Notebook results](training/results/notebook_audit.json), [study/export integrity](training/results/integrity_checks.json), [resume/baseline smoke tests](training/results/reproducibility_checks.json), and [course-app photo test](training/results/course_app_check.json) record the scope and limits. The original notebook remains student-owned and unchanged.
 
 ## Hosting
 

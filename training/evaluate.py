@@ -1,8 +1,8 @@
 """Select using development data first; only then evaluate every model on test."""
 import hashlib
+import argparse
 import json
 from pathlib import Path
-import shutil
 
 import numpy as np
 import onnxruntime as ort
@@ -33,20 +33,33 @@ def onnx_metrics(session, loader):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-dir", default="training")
+    parser.add_argument("--baseline", default="training/checkpoints/original.onnx")
+    parser.add_argument("--baseline-sha256", default="ae31c68aa9920808565fed2eaf50164647f90887b396a9fafe02fb9e4f034f7f")
+    args = parser.parse_args()
+    results, checkpoints = Path(args.run_dir) / "results", Path(args.run_dir) / "checkpoints"
+    baseline = Path(args.baseline)
+    if not baseline.exists():
+        parser.error("Original baseline is missing. Supply --baseline explicitly; never substitute the current deployed model. See training/README.md.")
+    if hashlib.sha256(baseline.read_bytes()).hexdigest() != args.baseline_sha256:
+        parser.error("Baseline SHA-256 does not match the fixed comparison model")
+    runs = [json.loads(path.read_text()) for path in sorted(results.glob("*_seed*.json"))]
+    if not runs:
+        parser.error("No completed runs in the selected --run-dir")
+    for run in runs:
+        path = checkpoints / f"{run['variant']}_seed{run['seed']}.pt"
+        if not path.exists():
+            parser.error(f"Missing checkpoint {path}; published JSON metrics alone cannot be resumed")
     torch.set_num_threads(4)
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(MEAN, STD)])
     loaders = {name: DataLoader(datasets.ImageFolder(ROOT / name, transform), batch_size=64)
                for name in EVAL_SETS + ["test", "camera_test"]}
-    baseline = CHECKPOINTS / "original.onnx"
-    if not baseline.exists():
-        shutil.copy2("leaf_model.onnx", baseline)
-        shutil.copy2("check_expected.json", CHECKPOINTS / "original_check_expected.json")
     options = ort.SessionOptions()
     options.intra_op_num_threads = 4
     old = ort.InferenceSession(str(baseline), sess_options=options, providers=["CPUExecutionProvider"])
     old_dev = {name: onnx_metrics(old, loaders[name]) for name in EVAL_SETS}
     old_score = float(np.mean([m["balanced_accuracy"] for m in old_dev.values()]))
-    runs = [json.loads(path.read_text()) for path in sorted(RESULTS.glob("*_seed*.json"))]
     summaries = []
     for variant in sorted({run["variant"] for run in runs}):
         scores = [run["best_dev_score"] for run in runs if run["variant"] == variant]
@@ -64,7 +77,7 @@ def main():
                      deploy_candidate=representative["best_dev_score"] > old_score,
                      baseline_sha256=hashlib.sha256(baseline.read_bytes()).hexdigest())
     # Persist the choice BEFORE opening the test loader for any model.
-    (RESULTS / "selection.json").write_text(json.dumps(selection, indent=2) + "\n")
+    (results / "selection.json").write_text(json.dumps(selection, indent=2) + "\n")
     print("Selection fixed before test:", json.dumps(selection), flush=True)
 
     rows = [dict(variant="deployed_original", seed=None, dev_score=old_score,
@@ -72,12 +85,12 @@ def main():
     for run in runs:
         model = models.mobilenet_v3_small(weights=None)
         model.classifier[3] = nn.Linear(model.classifier[3].in_features, 4)
-        model.load_state_dict(torch.load(CHECKPOINTS / f"{run['variant']}_seed{run['seed']}.pt", weights_only=True, map_location="cpu"))
+        model.load_state_dict(torch.load(checkpoints / f"{run['variant']}_seed{run['seed']}.pt", weights_only=True, map_location="cpu"))
         row = dict(variant=run["variant"], seed=run["seed"], best_epoch=run["best_epoch"],
                    dev_score=run["best_dev_score"], metrics={name: evaluate(model, loader, "cpu") for name, loader in loaders.items()})
         rows.append(row)
         print(f"{run['variant']} seed={run['seed']} test={row['metrics']['test']['accuracy']:.4f} camera={row['metrics']['camera_test']['accuracy']:.4f}", flush=True)
-    (RESULTS / "evaluation.json").write_text(json.dumps(dict(selection=selection, models=rows), indent=2) + "\n")
+    (results / "evaluation.json").write_text(json.dumps(dict(selection=selection, models=rows), indent=2) + "\n")
 
 
 if __name__ == "__main__":

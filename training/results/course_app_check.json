@@ -1,0 +1,17 @@
+{
+  "url": "https://tomasvicar.github.io/MLR-public/apps/classifier/",
+  "engine": "WebKit",
+  "test": "own ONNX file + reference photo, browser only",
+  "modelStatus": "Ready: leaf_model.onnx — 4 classes, 96 × 96 px, settings read from the model file.",
+  "photoStatus": "Photo classified: check_image.jpg",
+  "topClass": "apple  81.1%",
+  "bars": "apple\n0.811441\ncherry\n0.125688\nchestnut\n0.022892\nmaple\n0.039980\n",
+  "probabilities": [
+    0.8114405950745149,
+    0.12568795621031997,
+    0.02289183613229687,
+    0.03997961258286811
+  ],
+  "uploadRequests": [],
+  "physicalPhone": false
+}

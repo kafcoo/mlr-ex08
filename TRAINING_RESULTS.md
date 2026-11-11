@@ -53,8 +53,9 @@ Rows are true classes; columns are predictions.
 
 ## Export and web checks
 
-- ONNX opset **17**, input **1 × 3 × 96 × 96**, four output logits, **6,097,434 bytes**.
-- Model SHA-256: `be7438c7711112b3732ac8c74635ff27ac27052ef702ad634088131833685cfe`.
+- ONNX opset **17**, input **1 × 3 × 96 × 96**, four output logits, **6,097,584 bytes**.
+- Class names and preprocessing are also embedded in ONNX under `model_info`, as required by Task 2e and the course camera app.
+- Model SHA-256: `22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a`.
 - Maximum PyTorch/ONNX logit difference on five fixed random inputs: **1.98e-05**. The reference-image probabilities were checked separately.
 - The reference JPEG is unchanged; [check_expected.json](check_expected.json) now corresponds to the newly trained model. Previous values remain in Git history.
 
@@ -66,6 +67,8 @@ Rows are true classes; columns are predictions.
 | maple | 0.0405741669 |
 
 Browser verification results are documented in [the README](README.md) and [browser measurements](training/results/browser_validation.json). Native JPEG decoding differs between WebKit and Pillow/Chrome: WebKit's maximum probability discrepancy is about 0.00118 (0.118 percentage points). With the [lossless fixture containing the exact Pillow RGB pixels](training/results/reference_pixels.png), both browsers match PyTorch within 0.00000025. The JPEG-aware reference check therefore uses absolute tolerance 0.002; the separate same-pixels model check uses 0.00001. This distinguishes decoder variation from an export/preprocessing failure.
+
+Passing the JPEG-aware tolerance does **not** mean agreeing to three decimals. WebKit currently rounds apple to 0.811 while PyTorch rounds it to 0.810. The site reports these two checks separately. See [the requirement audit and remaining student tasks](AUDIT.md); native-JPEG three-decimal agreement remains an open requirement on WebKit.
 
 The browser's low-confidence display uses a fixed heuristic: top probability below 0.65 or top-two margin below 0.15. It preserves all four class probabilities. It is not a learned unknown class, and high confidence does not prove that a leaf belongs to a known species. A fifth-class detector needs representative negative training and evaluation data.
 

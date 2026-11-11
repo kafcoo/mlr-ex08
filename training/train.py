@@ -1,6 +1,7 @@
 """The notebook's MobileNet training loop, with controlled data/augmentation variants."""
 import argparse
 import copy
+import hashlib
 import json
 from pathlib import Path
 import random
@@ -39,15 +40,44 @@ def evaluate(model, loader, device):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--variants", nargs="+", default=["original_only", "expanded_only", "expanded_geo", "expanded_color"])
+    parser.add_argument("--variants", nargs="+", choices=["original_only", "expanded_only", "expanded_geo", "expanded_color"], default=["original_only", "expanded_only", "expanded_geo", "expanded_color"])
     parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
     parser.add_argument("--epochs", type=int, default=15)
     parser.add_argument("--device", default="mps" if torch.backends.mps.is_available() else "cpu")
+    parser.add_argument("--run-dir", default="training", help="Use a new directory for a new experiment")
     args = parser.parse_args()
+    if args.epochs < 1:
+        parser.error("--epochs must be positive")
     torch.set_num_threads(4)
     device = torch.device(args.device)
-    RESULTS.mkdir(parents=True, exist_ok=True)
-    CHECKPOINTS.mkdir(parents=True, exist_ok=True)
+    run_dir = Path(args.run_dir)
+    results, checkpoints = run_dir / "results", run_dir / "checkpoints"
+    results.mkdir(parents=True, exist_ok=True)
+    checkpoints.mkdir(parents=True, exist_ok=True)
+    # Fingerprint actual training/development files; do not inspect test images.
+    digest = hashlib.sha256()
+    for name in ["original_train", "expanded_train"] + EVAL_SETS:
+        files = sorted(path for path in (ROOT / name).rglob("*") if path.is_file())
+        if not files:
+            parser.error(f"Missing data in {ROOT / name}; run prepare_data.py first")
+        for path in files:
+            digest.update(str(path.relative_to(ROOT)).encode())
+            digest.update(hashlib.sha256(path.read_bytes()).digest())
+    protocol = dict(architecture="mobilenet_v3_small", weights="IMAGENET1K_V1", input_size=96,
+                    mean=MEAN, std=STD, optimizer="Adam", learning_rate=.001, batch_size=32,
+                    epochs=args.epochs, device=str(device), data_sha256=digest.hexdigest(),
+                    torch_version=torch.__version__, torchvision_version=__import__("torchvision").__version__,
+                    geometry=dict(crop_scale=[.7, 1.], rotation=20, horizontal_flip=True, vertical_flip=True),
+                    color_jitter=dict(brightness=.25, contrast=.25, saturation=.2, hue=.03))
+    protocol_path = run_dir / "protocol.json"
+    if protocol_path.exists():
+        if json.loads(protocol_path.read_text()) != protocol:
+            parser.error("Data or training settings changed; use a new --run-dir")
+    elif list(results.glob("*_seed*.json")):
+        parser.error("Archived results have no protocol fingerprint. Preserve them and use --run-dir training/runs/reproduce")
+    else:
+        protocol_path.write_text(json.dumps(protocol, indent=2) + "\n")
+    protocol_sha256 = hashlib.sha256(json.dumps(protocol, sort_keys=True).encode()).hexdigest()
     normalise = [transforms.ToTensor(), transforms.Normalize(MEAN, STD)]
     evaluation = transforms.Compose(normalise)
     loaders = {name: DataLoader(datasets.ImageFolder(ROOT / name, evaluation), batch_size=64, num_workers=0)
@@ -55,9 +85,13 @@ def main():
 
     for seed in args.seeds:
         for variant in args.variants:
-            result_path = RESULTS / f"{variant}_seed{seed}.json"
-            if result_path.exists():
-                print("Already completed:", result_path, flush=True)
+            result_path = results / f"{variant}_seed{seed}.json"
+            checkpoint_path = checkpoints / f"{variant}_seed{seed}.pt"
+            if result_path.exists() and checkpoint_path.exists():
+                previous = json.loads(result_path.read_text())
+                if previous.get("protocol_sha256") != protocol_sha256:
+                    parser.error(f"Protocol mismatch in {result_path}; use a new --run-dir")
+                print("Already completed with matching checkpoint/protocol:", result_path, flush=True)
                 continue
             random.seed(seed)
             np.random.seed(seed)
@@ -102,12 +136,12 @@ def main():
                     best_score, best_loss, best_epoch = score, val_loss, epoch + 1
                     best_state = copy.deepcopy({k: v.cpu() for k, v in model.state_dict().items()})
                 print(f"{variant} seed={seed} epoch={epoch+1:02d} loss={loss_sum/len(dataset):.4f} dev={score:.4f} elapsed={time.perf_counter()-start:.1f}s", flush=True)
-            torch.save(best_state, CHECKPOINTS / f"{variant}_seed{seed}.pt")
+            torch.save(best_state, checkpoint_path)
             result = dict(variant=variant, seed=seed, epochs=args.epochs, best_epoch=best_epoch,
                           best_dev_score=best_score, best_dev_loss=best_loss, train_count=len(dataset),
                           classes=dataset.classes, seconds=time.perf_counter() - start, device=str(device),
                           torch_version=torch.__version__, torchvision_version=__import__("torchvision").__version__,
-                          history=history)
+                          protocol_sha256=protocol_sha256, history=history)
             result_path.write_text(json.dumps(result, indent=2) + "\n")
             del model, optimizer
             if device.type == "mps":

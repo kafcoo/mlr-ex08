@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checks": [
+    "935 source RGB hashes, recorded counts and train/dev/test separation",
+    "12 runs \u00d7 15 epochs: finite losses, correct development aggregates and best epochs",
+    "13 models \u00d7 6 datasets: confusion matrices, sample counts, accuracy and recall",
+    "Archived variant/median-seed selection agrees with development-only rule",
+    "Current ONNX graph, embedded/JSON metadata, SHA-256, NCHW and reference probabilities",
+    "Export ZIP contains the exact current model and all three companion files"
+  ],
+  "model_sha256": "22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a"
+}
