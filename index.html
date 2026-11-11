@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#214e3c">
+  <title>Leaf lens · Live leaf classifier</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <style>
+    :root{color-scheme:light;--ink:#203c30;--green:#285a42;--muted:#66776b;--paper:#f5f5ec;--line:#dce1d5}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{max-width:1060px;margin:auto;padding:36px 24px max(32px,env(safe-area-inset-bottom))}header{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:20px}.brand{font-weight:700;letter-spacing:-.04em;font-size:24px}.tag{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}h1{font:500 clamp(36px,6vw,60px)/1.06 Georgia,serif;letter-spacing:-.04em;margin:34px 0 16px}p{margin:0 0 18px;color:var(--muted)}.intro{max-width:610px}.workspace{display:grid;grid-template-columns:1.15fr 1fr;gap:24px;margin-top:26px}.panel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}.viewer{position:relative;aspect-ratio:1;background:#e9eee4;border-radius:12px;overflow:hidden;display:grid;place-items:center;margin:14px 0 18px}.viewer video,.viewer img{width:100%;height:100%;object-fit:cover;position:absolute}.viewer [hidden]{display:none}.empty{text-align:center;padding:30px;max-width:310px}.leaf{font-size:55px;margin-bottom:8px}.guide{position:absolute;inset:12%;border:1px solid #ffffffbd;border-radius:14px;pointer-events:none;box-shadow:0 0 0 60px #10271918}.guide:after{content:"Keep the leaf in the centre";position:absolute;bottom:10px;left:0;right:0;text-align:center;color:white;font-size:12px;text-shadow:0 1px 4px #000}.controls{display:flex;flex-wrap:wrap;gap:10px}button,.upload{appearance:none;border:1px solid var(--line);border-radius:10px;padding:12px 16px;font:600 14px system-ui;cursor:pointer;background:white;color:var(--ink);min-height:46px}button.primary{background:var(--green);border-color:var(--green);color:white}button:disabled{opacity:.5;cursor:wait}button:focus-visible,.upload:focus-within,a:focus-visible{outline:3px solid #b2872e;outline-offset:3px}.upload input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}.status{font-size:13px;margin:14px 0 0;min-height:40px}.status.error{color:#9d3428}h2{font-size:24px;letter-spacing:-.04em;font-weight:600;margin:10px 0 0}.prediction{min-height:70px}.row{margin:22px 0}.row-head{display:flex;justify-content:space-between;font-size:15px;margin-bottom:8px}.class-name{text-transform:capitalize}.probability{font-variant-numeric:tabular-nums;color:var(--muted)}.track{height:8px;background:#edf0e8;border-radius:10px;overflow:hidden}.bar{width:0;height:100%;background:#aabca5;transition:width .15s}.row.best .bar{background:var(--green)}.row.best .class-name{font-weight:700}.note{border-top:1px solid var(--line);padding-top:16px;font-size:13px;margin:24px 0 0}.test{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}.test button{padding:9px 13px;min-height:42px}.test-result{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted);font-variant-numeric:tabular-nums}.share{display:flex;align-items:center;gap:24px;border-top:1px solid var(--line);margin-top:34px;padding-top:26px}.share h2{font-size:20px;margin:0 0 5px}.share p{font-size:13px;margin:0 0 5px}.share a{color:var(--green);overflow-wrap:anywhere;font-size:14px}#qr{flex:0 0 132px;width:132px;height:132px;background:white;border-radius:8px;padding:6px}#qr svg{display:block;width:120px;height:120px}footer{font-size:11px;color:var(--muted);margin-top:24px} @media(max-width:650px){main{padding:22px 16px}.workspace{grid-template-columns:1fr;gap:16px}.panel{padding:18px}h1{margin-top:28px}.share{gap:16px}.tag{max-width:110px;text-align:right}#qr{flex-basis:120px;width:120px;height:120px}#qr svg{width:108px;height:108px}}
+  </style>
+</head>
+<body>
+<main>
+  <header><span class="brand">❧ Leaf lens</span><span class="tag">MLR EX08 / Field classifier</span></header>
+  <h1>A little closer to nature.</h1>
+  <p class="intro">Point your camera at a leaf. See how your model recognises apple, cherry, chestnut and maple, right in your browser.</p>
+  <div class="workspace">
+    <section class="panel" aria-label="Camera and photo input">
+      <span class="eyebrow">01 / Observe</span>
+      <div class="viewer">
+        <div class="empty" id="placeholder"><div class="leaf" aria-hidden="true">❧</div><strong>One leaf, four possibilities.</strong><p>Start the rear camera or choose a photo to begin.</p></div>
+        <video id="video" playsinline webkit-playsinline muted autoplay hidden></video>
+        <img id="photo" alt="The selected leaf; the central square is classified" hidden>
+        <div class="guide" id="guide" hidden></div>
+      </div>
+      <div class="controls">
+        <button id="camera" class="primary" disabled>Start rear camera</button>
+        <button id="stop" hidden>Stop camera</button>
+        <label class="upload">Choose photo<input id="upload" type="file" accept="image/*" disabled></label>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite">Loading the leaf model…</p>
+    </section>
+    <section class="panel" aria-label="Classification probabilities">
+      <span class="eyebrow">02 / Identify</span>
+      <div class="prediction"><h2 id="winner">Waiting for a leaf</h2><span id="timing" class="eyebrow">All four classes · live probabilities</span></div>
+      <div id="results"></div>
+      <p class="note">Only the central square is analysed. Images stay on your device. These are model estimates; the model always chooses among its four known classes.</p>
+      <div class="test"><button id="check" disabled>Check reference image</button><pre id="test-result" class="test-result" aria-live="polite">Compare the supplied photo against its expected probabilities.</pre></div>
+    </section>
+  </div>
+  <section class="share" aria-label="Open this app on a phone">
+    <div id="qr" role="img" aria-label="QR code opening this app's public GitHub Pages URL"></div>
+    <div><h2>Take Leaf lens outside.</h2><p>Scan this QR code to open this app on your phone.</p><a id="app-link" href="https://kafcoo.github.io/mlr-ex08/">https://kafcoo.github.io/mlr-ex08/</a><p id="qr-status"></p></div>
+  </section>
+  <footer>Leaf lens · ONNX Runtime Web · Runs locally on your device</footer>
+</main>
+<script>
+'use strict';
+const APP_URL = 'https://kafcoo.github.io/mlr-ex08/';
+const ORT_CDN = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
+const $ = id => document.getElementById(id);
+const video = $('video'), photo = $('photo');
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d', {willReadFrequently:true});
+let info, session, stream = null, generation = 0, busy = false, timer;
+let lastProbabilities = null, lastReferenceCheck = null;
+function status(message, error=false) { $('status').textContent=message; $('status').classList.toggle('error',error); }
+async function json(url) { const response=await fetch(url); if(!response.ok) throw new Error(`${url}: HTTP ${response.status}`); return response.json(); }
+function stopCamera() {
+  generation++; clearTimeout(timer);
+  if(stream) stream.getTracks().forEach(track=>track.stop());
+  stream=null; video.pause(); video.srcObject=null;
+  $('stop').hidden=true; $('camera').textContent='Start rear camera';
+}
+function showSource(source) {
+  $('placeholder').hidden=true; video.hidden=source!==video;
+  photo.hidden=source!==photo; $('guide').hidden=source!==video;
+}
+function preprocess(source) {
+  const w=source.videoWidth || source.naturalWidth, h=source.videoHeight || source.naturalHeight;
+  if(!w || !h) throw new Error('The image is not ready yet.');
+  const side=Math.min(w,h), size=info.input_size;
+  ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
+  ctx.drawImage(source,(w-side)/2,(h-side)/2,side,side,0,0,size,size);
+  const rgba=ctx.getImageData(0,0,size,size).data, plane=size*size;
+  const data=new Float32Array(3*plane);
+  for(let c=0;c<3;c++) for(let i=0;i<plane;i++)
+    data[c*plane+i]=(rgba[i*4+c]/255-info.mean[c])/info.std[c];
+  return new ort.Tensor('float32',data,[1,3,size,size]);
+}
+async function classify(source) {
+  // One inference at a time, including camera/photo/reference transitions.
+  while(busy) await new Promise(resolve=>setTimeout(resolve,20));
+  busy=true;
+  let input, output;
+  try {
+    input=preprocess(source);
+    output=await session.run({[session.inputNames[0]]:input});
+    const logits=Array.from(output[session.outputNames[0]].data);
+    if(logits.length!==info.classes.length || !logits.every(Number.isFinite)) throw new Error('Unexpected model output.');
+    const max=Math.max(...logits), exp=logits.map(x=>Math.exp(x-max)), sum=exp.reduce((a,b)=>a+b,0);
+    return exp.map(x=>x/sum);
+  } finally {
+    if(input) input.dispose();
+    if(output) Object.values(output).forEach(t=>t.dispose());
+    busy=false;
+  }
+}
+function render(probabilities, milliseconds) {
+  lastProbabilities=probabilities;
+  const best=probabilities.indexOf(Math.max(...probabilities));
+  $('winner').textContent=info.classes[best][0].toUpperCase()+info.classes[best].slice(1);
+  $('timing').textContent=`${(probabilities[best]*100).toFixed(2)}% probability · ${Math.round(milliseconds)} ms`;
+  probabilities.forEach((p,i)=>{
+    const row=$('class-'+i); row.classList.toggle('best',i===best);
+    row.querySelector('.probability').textContent=(p*100).toFixed(4)+'%';
+    row.querySelector('.bar').style.width=(p*100)+'%';
+    row.querySelector('[role="meter"]').setAttribute('aria-valuenow',(p*100).toFixed(4));
+  });
+}
+async function live(token) {
+  if(!stream || token!==generation) return;
+  try {
+    if(video.readyState>=2 && !document.hidden) {
+      const start=performance.now(), probabilities=await classify(video);
+      if(token!==generation) return;
+      render(probabilities,performance.now()-start);
+    }
+    if(token===generation) timer=setTimeout(()=>live(token),120);
+  } catch(error) { stopCamera(); status('Camera inference failed: '+error.message+'. Try choosing a photo.',true); }
+}
+$('camera').addEventListener('click',async()=>{
+  stopCamera(); const token=generation;
+  $('camera').disabled=true;
+  try {
+    if(!navigator.mediaDevices?.getUserMedia) throw new Error('Camera access needs HTTPS and a supported browser');
+    status('Requesting rear-camera access…');
+    const media=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});
+    if(token!==generation) {media.getTracks().forEach(t=>t.stop());return;}
+    stream=media; video.srcObject=media; showSource(video);
+    await video.play();
+    if(token!==generation) return;
+    $('stop').hidden=false; $('camera').textContent='Restart camera';
+    status('Camera live · centre a leaf in the square.'); live(token);
+  } catch(error) { if(token===generation) {stopCamera();status('Could not start the camera: '+error.message+'. Allow camera access in Safari settings or choose a photo.',true);} }
+  finally {$('camera').disabled=false;}
+});
+$('stop').addEventListener('click',()=>{stopCamera();status('Camera stopped. Choose a photo or start it again.');});
+function loadImage(url) { return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('Could not decode this image. Try a JPEG or PNG photo.'));image.src=url;}); }
+async function showPhoto(url,token) {
+  const image=await loadImage(url);
+  if(token!==generation) return null;
+  photo.src=url;showSource(photo);
+  const start=performance.now(), probabilities=await classify(image);
+  if(token!==generation) return null;
+  render(probabilities,performance.now()-start);return probabilities;
+}
+$('upload').addEventListener('change',async event=>{
+  const file=event.target.files[0]; if(!file) return;
+  stopCamera(); const token=generation, url=URL.createObjectURL(file);
+  try {status('Analysing your photo…');if(await showPhoto(url,token)) status('Photo analysed · central square crop.');}
+  catch(error) {if(token===generation) status(error.message,true);}
+  finally {URL.revokeObjectURL(url);event.target.value='';}
+});
+$('check').addEventListener('click',async()=>{
+  stopCamera();const token=generation;$('check').disabled=true;
+  try {
+    status('Checking the supplied reference image…');
+    const expected=await json('check_expected.json');
+    const actual=await showPhoto('check_image.jpg',token);if(!actual) return;
+    // Canvas/JPEG decoders and resize filters can differ slightly from Pillow.
+    const tolerance=0.0005;
+    const errors=actual.map((p,i)=>Math.abs(p-expected[info.classes[i]]));
+    const passed=errors.every(e=>Number.isFinite(e)&&e<=tolerance);
+    lastReferenceCheck={passed,tolerance,actual:Object.fromEntries(info.classes.map((name,i)=>[name,actual[i]])),expected,maxAbsoluteError:Math.max(...errors)};
+    $('test-result').textContent=`${passed?'PASS':'FAIL'} · absolute tolerance ${tolerance}\nClass          Actual       Expected\n`+info.classes.map((name,i)=>`${name.padEnd(12)} ${actual[i].toFixed(8)}   ${expected[name].toFixed(8)}`).join('\n')+`\nMax absolute error: ${Math.max(...errors).toExponential(3)}`;
+    status(passed?'Reference check passed. Ready for your next leaf.':'Reference check failed. See the comparison below.',!passed);
+  } catch(error) {$('test-result').textContent='Reference check failed: '+error.message;status(error.message,true);}
+  finally {$('check').disabled=false;}
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden && stream) {stopCamera();status('Camera stopped while the page is in the background. Tap Start rear camera to resume.');}});
+window.addEventListener('pagehide',stopCamera);
+async function init() {
+  // Generate the QR in this browser. No external QR image service is used.
+  try {
+    const qr=qrcode(0,'M');qr.addData(APP_URL);qr.make();
+    $('qr').innerHTML=qr.createSvgTag({cellSize:4,margin:16,scalable:true});
+    $('qr').dataset.encodedUrl=APP_URL;
+    $('app-link').href=APP_URL;$('app-link').textContent=APP_URL;
+    const current=new URL(location.href);current.search='';current.hash='';
+    if(current.href===APP_URL) $('qr-status').textContent='Opens this public app.';
+  } catch(error) {$('qr-status').textContent='QR unavailable. Use the link above.';}
+  try {
+    if(!window.ort) throw new Error('ONNX Runtime could not load from its CDN. Check your connection and reload');
+    info=await json('model_info.json');
+    if(!Number.isInteger(info.input_size)||info.input_size<=0||!Array.isArray(info.classes)||info.classes.length!==4||info.mean?.length!==3||info.std?.length!==3||!info.std.every(v=>Number.isFinite(v)&&v>0)) throw new Error('Invalid model metadata');
+    canvas.width=canvas.height=info.input_size;
+    info.classes.forEach((name,i)=>{
+      const row=document.createElement('div');row.id='class-'+i;row.className='row';
+      row.innerHTML='<div class="row-head"><span class="class-name"></span><span class="probability">—</span></div><div class="track" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar"></div></div>';
+      row.querySelector('.class-name').textContent=name;row.querySelector('[role="meter"]').setAttribute('aria-label',name+' probability');$('results').append(row);
+    });
+    ort.env.wasm.wasmPaths=ORT_CDN;
+    ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
+    session=await ort.InferenceSession.create('leaf_model.onnx',{executionProviders:['wasm'],graphOptimizationLevel:'all'});
+    $('camera').disabled=$('upload').disabled=$('check').disabled=false;
+    status('Model ready · start the camera or choose a photo.');
+  } catch(error) {status('Could not load the model: '+error.message,true);}
+}
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+.local-tools/
+node_modules/
+.DS_Store
+data/
+*.zip
+*.pt
+*.ipynb
