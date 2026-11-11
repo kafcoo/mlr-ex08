@@ -1,0 +1,135 @@
+[
+  {
+    "variant": "leaf_bn_geo",
+    "architecture": "leafnet_bn",
+    "representative_seed": 0,
+    "mean_dev_score": 0.7367704212665558,
+    "std_dev_score": 0.006639952473284835,
+    "parameters": 208644,
+    "trainable_parameters": 208644,
+    "mean_training_seconds": 14.47385448597682,
+    "onnx_bytes": 835766,
+    "onnx_sha256": "29195f8b79bcf3d075d021665be7b6ddbdb84c2c38e97d61025e32977b1164bd",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_leaf_bn_geo.onnx",
+    "reference_probabilities": [
+      0.7949180603027344,
+      0.1987464725971222,
+      0.000990083790384233,
+      0.005345419980585575
+    ]
+  },
+  {
+    "variant": "leaf_gap_geo",
+    "architecture": "leafnet_bn_gap",
+    "representative_seed": 0,
+    "mean_dev_score": 0.6998573889334997,
+    "std_dev_score": 0.03155642778710399,
+    "parameters": 65284,
+    "trainable_parameters": 65284,
+    "mean_training_seconds": 14.280923861001307,
+    "onnx_bytes": 262357,
+    "onnx_sha256": "7557f875b87b71e8cc0e5f193fd6bed33ef7087ca23068a94ce08d3e2c18a642",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_leaf_gap_geo.onnx",
+    "reference_probabilities": [
+      0.7397143244743347,
+      0.23232343792915344,
+      0.0036205477081239223,
+      0.02434176206588745
+    ]
+  },
+  {
+    "variant": "leaf_geo",
+    "architecture": "leafnet",
+    "representative_seed": 0,
+    "mean_dev_score": 0.6846292118231455,
+    "std_dev_score": 0.014772738126795078,
+    "parameters": 208292,
+    "trainable_parameters": 208292,
+    "mean_training_seconds": 12.723601486029414,
+    "onnx_bytes": 835734,
+    "onnx_sha256": "2c74900459f157b827971a55c55d9ae1d2df08d04345b3d8b377419d6e8edad1",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_leaf_geo.onnx",
+    "reference_probabilities": [
+      0.16497847437858582,
+      0.673894464969635,
+      0.007543294690549374,
+      0.15358375012874603
+    ]
+  },
+  {
+    "variant": "mobile_cosine",
+    "architecture": "mobilenet_v3_small",
+    "representative_seed": 0,
+    "mean_dev_score": 0.813560277223587,
+    "std_dev_score": 0.00406434593523639,
+    "parameters": 1521956,
+    "trainable_parameters": 1521956,
+    "mean_training_seconds": 48.29367945867125,
+    "onnx_bytes": 6097584,
+    "onnx_sha256": "32eec34e8e1569baca429e6fcc12ce03170bc9333158c7e0bd19f8d305955857",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_mobile_cosine.onnx",
+    "reference_probabilities": [
+      0.08903764933347702,
+      0.9109402298927307,
+      1.4590505088563077e-05,
+      7.543158972111996e-06
+    ]
+  },
+  {
+    "variant": "mobile_frozen",
+    "architecture": "mobilenet_v3_small",
+    "representative_seed": 2,
+    "mean_dev_score": 0.7948288669188818,
+    "std_dev_score": 0.0028889974214187427,
+    "parameters": 1521956,
+    "trainable_parameters": 4100,
+    "mean_training_seconds": 15.748272805668725,
+    "onnx_bytes": 6097584,
+    "onnx_sha256": "6fd26dd67cb3726565936c78f2b17cd5e18eee0b4fce3b6d2729496dd6fcd1f0",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_mobile_frozen.onnx",
+    "reference_probabilities": [
+      0.2553294897079468,
+      0.7404741644859314,
+      0.0034780369605869055,
+      0.0007183545967563987
+    ]
+  },
+  {
+    "variant": "mobile_geo",
+    "architecture": "mobilenet_v3_small",
+    "representative_seed": 2,
+    "mean_dev_score": 0.8035342295964559,
+    "std_dev_score": 0.008023351549288791,
+    "parameters": 1521956,
+    "trainable_parameters": 1521956,
+    "mean_training_seconds": 38.325249722033426,
+    "onnx_bytes": 6097584,
+    "onnx_sha256": "faa230e9d8e4c0cd8345309eb0915cfb5e670d826ef2e59cbd588716d81a551b",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_mobile_geo.onnx",
+    "reference_probabilities": [
+      0.784673810005188,
+      0.2117404341697693,
+      0.002567385323345661,
+      0.0010183715494349599
+    ]
+  },
+  {
+    "variant": "mobile_smoothing",
+    "architecture": "mobilenet_v3_small",
+    "representative_seed": 0,
+    "mean_dev_score": 0.8313988149166107,
+    "std_dev_score": 0.006559601765088801,
+    "parameters": 1521956,
+    "trainable_parameters": 1521956,
+    "mean_training_seconds": 44.241475653019734,
+    "onnx_bytes": 6097584,
+    "onnx_sha256": "67c2c6d3871de2b590350e04ea6aef0dbd87233ec4c3b365031142252bfce485",
+    "local_model_path": "training/runs/networks_v1/checkpoints/profile_mobile_smoothing.onnx",
+    "reference_probabilities": [
+      0.5251854062080383,
+      0.4512040913105011,
+      0.01689339615404606,
+      0.006717146374285221
+    ]
+  }
+]

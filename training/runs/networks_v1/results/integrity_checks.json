@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "runs": 21,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "historical_test_used": false,
+  "checks": [
+    "Actual train/dev and architecture source fingerprints",
+    "7 variants \u00d7 3 seeds \u00d7 15 epochs",
+    "Same 649 training images and fixed development views",
+    "Correct best epochs and LR schedules",
+    "Frozen-head parameter budget",
+    "Confusion matrices and metrics",
+    "Development-only mean/median selection"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "checks": [
+    "leafnet: same state and outputs as actual Task 3 notebook class",
+    "leafnet_bn: same state and outputs as actual Task 3 notebook class",
+    "GAP preserves four logits while reducing parameter count",
+    "Frozen experiment updates only 4100 last-layer parameters; all BN statistics remain unchanged"
+  ]
+}

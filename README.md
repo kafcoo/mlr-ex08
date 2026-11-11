@@ -1,60 +1,54 @@
-# Leaf lens · MLR EX08
+# LEAF/LENS · MLR EX08
 
-**Open the app: https://kafcoo.github.io/mlr-ex08/**
+**Open: https://kafcoo.github.io/mlr-ex08/**
 
-**Requirement review:** [AUDIT.md](AUDIT.md) records the notebook checks, fixes, outstanding hand-in requirements and the next experiment plan. This technical project still needs the student's own `REVIEW.md`, `REPORT.md` and a real phone screenshot.
+One `index.html`, plain JavaScript, device-local ONNX inference. Start the rear camera or choose a photo; all four class probabilities update on the page. The QR is generated locally and points to this app's own public URL. No photograph is sent to a server.
 
-A single-page, plain JavaScript leaf classifier using an ONNX MobileNetV3-small model. Open the HTTPS link in Safari on an iPhone, tap **Start rear camera**, allow camera access, and hold a leaf in the centre of the square preview. Probabilities for apple, cherry, chestnut and maple update continuously. **Choose photo** provides a fallback. The camera stops when the page goes into the background; tap Start rear camera to resume.
+## Current model
 
-## Improved model
+**MobileNetV3-small + geometric augmentation + label smoothing 0.05**, seed **0**, best epoch **14**. Variant mean dev score: **83.14 ± 0.66%** over seeds 0/1/2. Selected checkpoint: **82.76%**. These are development balanced accuracies, **not independent test or phone-camera accuracies**. The fixed 120-image historical test was not reopened for this new study. Physical-phone testing remains pending.
 
-The deployed model was selected after **12 training runs**: four controlled data/augmentation variants, each with three seeds. Cleaning the original and historical photos yielded **649 training images**, compared with the original 107, with separate development data and a final 120-image historical test. The selected variant is **`expanded_color`**, seed **2**.
+- [New networks: measured scores, model size, WASM speed and selection rationale](NETWORK_RESULTS.md)
+- [Original 12-run data/augmentation study — archived](TRAINING_RESULTS.md)
+- [Current release provenance and SHA-256](release_info.json)
+- [Audit and remaining hand-in tasks](AUDIT.md)
+- [Report draft](REPORT_DRAFT.md) · [Review draft](REVIEW_DRAFT.md)
 
-On the same held-out historical test, the original deployed model scored **50.00%** and the selected checkpoint scored **79.17%**. This is a dataset result, not a measured physical-phone accuracy. Selection used development scores before looking at test results.
+Seven new variants were trained on identical data for 15 epochs: Task 3 LeafNet, BatchNorm, GAP, and MobileNet with full fine-tuning, frozen last-layer-only training, cosine scheduling, or smoothing. MobileNet had higher dev scores; custom networks were smaller. Browser timings are from a desktop Mac, not a phone. The original 12 measurements remain unchanged; their historical 79.17% test result belongs to a previous checkpoint.
 
-See [the full technical comparison](TRAINING_RESULTS.md) for all variants, seed spread, confusion matrix, cleaning decisions and limitations. See [training instructions](training/README.md) to reproduce the runs. This keeps the original notebook's MobileNet/PyTorch approach and adds no training framework.
+## Camera and preprocessing
 
-## Camera, confidence and QR
+Open the HTTPS link in Safari on iPhone, tap **Start rear camera**, allow access and centre one leaf. **Choose photo** is the fallback. The camera stops in the background; tap Start to resume.
 
-The browser flags uncertainty when the highest probability is below **0.65**, or the gap between the top two is below **0.15**. It suggests another angle while still displaying every probability. This is a heuristic, not a trained unknown class: an unfamiliar species or unrelated object can still receive a high score.
+[model_info.json](model_info.json) defines classes `apple, cherry, chestnut, maple`, size **96**, mean `[0.485,0.456,0.406]` and std `[0.229,0.224,0.225]`. The page crops the central square, resizes it to 96 × 96, divides RGB by 255 and standardizes each channel. Contiguous R/G/B planes form **[1,3,96,96] float32**. Stable softmax converts logits to probabilities. Metadata is also embedded in [leaf_model.onnx](leaf_model.onnx), as in Task 2e.
 
-The labelled QR code at the bottom is generated in the browser with `qrcode-generator` and encodes **https://kafcoo.github.io/mlr-ex08/**, also shown as a clickable link. No external QR image service is used. Photos and camera frames are processed locally and are never uploaded.
+The uncertain flag uses top probability below 0.65 or top-two margin below 0.15. It is a heuristic, not a trained unknown class or calibrated confidence. The supplied reference is ambiguous for the new model: a numerical check may PASS while the display correctly says Uncertain.
 
-## Model and preprocessing
+## JPEG fixed
 
-[index.html](index.html) loads [model_info.json](model_info.json) and [leaf_model.onnx](leaf_model.onnx). For every frame or uploaded photo it:
+JPEG uploads now use the same pinned **`@jsquash/jpeg@1.6.0` MozJPEG/WASM decoder** in every browser, with EXIF orientation enabled. Tests compare exact Pillow pixels and all eight EXIF orientations. PNG/other supported formats use native decoding. Live camera frames are already decoded and do not need the JPEG codec.
 
-1. Crops the central square using the shorter image dimension.
-2. Resizes that square to **96 × 96**, as specified by `input_size`.
-3. Reads RGB channels, divides pixels by 255, and applies `(channel - mean) / std` using mean `[0.485, 0.456, 0.406]` and standard deviation `[0.229, 0.224, 0.225]` from the metadata.
-4. Creates a float32 tensor with shape **[1, 3, 96, 96]**, with contiguous R, G and B planes (NCHW).
-5. Runs the model and applies numerically stable softmax to its four output logits, preserving metadata class order.
+The original [check_image.jpg](check_image.jpg) is unchanged. [check_expected.json](check_expected.json) comes from the newly selected PyTorch model and was checked against ONNX. **Reference & diagnostics** now requires absolute error below **0.00001** and actual **three-decimal agreement**. Both WebKit and Chrome pass; observed error is about **4.12 × 10⁻⁶**. There is no relaxed 0.002 tolerance or browser-specific expected result.
 
-ONNX Runtime Web **1.20.1** loads from jsDelivr. Single-threaded WebAssembly avoids requiring cross-origin isolation or SharedArrayBuffer on GitHub Pages. Inline, muted video, a user-initiated request and the `environment` facing-mode preference support Safari on iPhone. The QR library is also version-pinned. An internet connection is needed to load CDN dependencies and the model initially. The model uses ONNX opset **17**, includes embedded `model_info` metadata as in Task 2e, and is **6,097,584 bytes**. The dark technical interface uses inline CSS and system fonts; no UI framework or additional asset service is needed.
+A 12MP JPEG upload was also checked; its display preview is capped at 1024 pixels while inference uses the original source. Large-image Canvas resize filters can still differ between browsers; exact reference parity applies to the supplied 96 × 96 JPEG. See the detailed limitations in the network report.
 
-## Reference check and browser verification
+ONNX Runtime Web **1.20.1**, QR generator **1.4.4**, and the optional JPEG codec load from jsDelivr. Code/WASM downloads; images stay local. A single WASM thread, inline muted video and a user-initiated camera request support GitHub Pages/Safari. Model and metadata URLs carry a model revision to avoid mixing cached releases.
 
-Tap **Check reference image** to classify [check_image.jpg](check_image.jpg) and compare every output against [check_expected.json](check_expected.json). Actual and expected probabilities, maximum absolute error and PASS/FAIL are shown. The native-JPEG absolute tolerance is **0.002** per probability (0.2 percentage points). A separate identical-RGB-pixels check uses a strict **0.00001** tolerance.
+## Notebook and checks
 
-The reference JPEG is unchanged. Its expected probabilities were regenerated from the selected PyTorch checkpoint and checked against ONNX Runtime. The old model and its old expected values remain in Git history. Reference probabilities change when the model changes.
+The user-authorized corrections are minimal: Task 3d uses `aug_train_loader`; train loaders use fixed generators; the custom dataset filters image extensions. Task 2 writes safely into `exports/task2/`. The original notebook has a local backup. The corrected local notebook has fresh outputs from **29/29 code cells and 14/14 semantic checks**.
 
-| Class | Chrome probability | WebKit probability | Expected probability |
-| --- | ---: | ---: | ---: |
-| apple | 0.81026398 | 0.81144060 | 0.8102642298 |
-| cherry | 0.12601460 | 0.12568796 | 0.1260144562 |
-| chestnut | 0.02314719 | 0.02289184 | 0.0231471751 |
-| maple | 0.04057423 | 0.03997961 | 0.0405741669 |
+- [Notebook execution](training/results/notebook_audit.json)
+- [Original study/current export integrity](training/results/integrity_checks.json)
+- [New 21-run checks](training/runs/networks_v1/results/integrity_checks.json)
+- [Task 3 network parity and frozen BN checks](training/runs/networks_v1/results/network_checks.json)
+- [Browser/QR/privacy/layout checks](training/results/web_audit.json)
+- [JPEG/EXIF tests](training/results/jpeg_decoder_checks.json)
 
-Maximum native-JPEG absolute errors were **2.49e-07** in Chrome and **0.00118** in WebKit. Safari decodes the JPEG into slightly different RGB pixels than Pillow/Chrome. When both browsers receive exactly the same decoded RGB pixels as PyTorch, their probability error is just **2.50 × 10⁻⁷**. This isolates the larger WebKit difference to JPEG decoding. Both the reference button and actual file upload were checked. See [browser validation measurements](training/results/browser_validation.json).
+Browser tests cover uploads, strict probabilities, denied-camera fallback, a simulated live stream, crop/RGB/NCHW, uncertainty, stale inference races, widths 320/390/768/1366, independent QR decoding and absence of uploads. A physical iPhone test is still for the student to perform.
 
-**Three-decimal agreement is a separate requirement:** Chrome passes; WebKit currently differs (for example apple rounds to 0.811 rather than 0.810). The app shows this separately from its JPEG tolerance result. Do not interpret the tolerance PASS as satisfying the notebook's three-decimal check. See the [audit](AUDIT.md) for the remaining verification and reporting steps.
+## Reproduce and submit
 
-Automated checks used Playwright WebKit with an iPhone 13 viewport and Chrome. They verified RGB channel order and normalization, central-square cropping, NCHW dimensions, all four probabilities, photo upload, camera-denial fallback and responsive layout. A simulated camera stream in Chrome verified repeated inference, the rear-camera preference and camera-track cleanup. The rendered QR was independently decoded with `jsQR` and matched the public app URL. A physical iPhone camera was not available for testing.
+See [training instructions](training/README.md). Training uses small PyTorch loops, copied Task 3 networks and no new training framework. Raw data, checkpoints, local notebooks, environments and ZIPs stay out of Git. The current local `ex08_for_agent.zip` contains the matching model, JSON and reference files.
 
-The original notebook was also executed unchanged in an isolated working directory: **29/29 code cells ran without runtime errors**. Of 14 additional semantic checks, 13 passed; the Task 3d augmented-loader check correctly identified the notebook defect. [Notebook results](training/results/notebook_audit.json), [study/export integrity](training/results/integrity_checks.json), [resume/baseline smoke tests](training/results/reproducibility_checks.json), and [course-app photo test](training/results/course_app_check.json) record the scope and limits. The original notebook remains student-owned and unchanged.
-
-## Hosting
-
-GitHub Pages serves the repository root from **main**. There is no build step. Keep the HTML, model, metadata and two reference-check files together. `.nojekyll` enables direct static serving.
-
-Raw photos, training checkpoints, notebooks, ZIP archives, Python environments and local verification tools are excluded from Git. The public training scripts, audit and metrics document how the model was built.
+Pages serves **main**, with no build step. `MLRteacher` has been invited. The student still needs a real phone screenshot and their own final `REVIEW.md` and `REPORT.md`, pushed within **48 hours of the lab**. The labelled drafts contain technical assistance and unfilled phone observations.

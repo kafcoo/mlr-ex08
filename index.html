@@ -52,7 +52,7 @@ h2{font-size:clamp(27px,3.3vw,38px);letter-spacing:-.055em;font-weight:550;line-
       <div class="panel-header"><span class="eyebrow">02 / Model output</span><span class="state" id="model-state">Loading</span></div>
       <div class="prediction"><span class="eyebrow">Top match</span><h2 id="winner">Waiting for a leaf</h2><span id="timing" class="eyebrow">All four classes · live probabilities</span><p id="confidence" style="font-size:12px;margin:8px 0 0"></p></div>
       <div id="results"></div>
-      <p class="note">Only the central square is analysed. Images stay on your device. The model knows four classes. A low-confidence flag suggests trying another view; an unfamiliar species can still receive a high score. <a href="https://github.com/kafcoo/mlr-ex08/blob/main/TRAINING_RESULTS.md">Training comparison</a></p>
+      <p class="note">Only the central square is analysed. Images stay on your device. The model knows four classes. A low-confidence flag suggests trying another view; an unfamiliar species can still receive a high score. <a href="https://github.com/kafcoo/mlr-ex08/blob/main/NETWORK_RESULTS.md">Training comparison</a></p>
       <details class="test" id="diagnostics"><summary>Reference &amp; diagnostics</summary><button id="check" disabled>Check reference image</button><pre id="test-result" class="test-result" aria-live="polite">Compare the supplied photo against its expected probabilities.</pre></details>
     </section>
   </div>
@@ -66,14 +66,17 @@ h2{font-size:clamp(27px,3.3vw,38px);letter-spacing:-.055em;font-weight:550;line-
 'use strict';
 const APP_URL = 'https://kafcoo.github.io/mlr-ex08/';
 const ORT_CDN = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/';
+const MODEL_REVISION = '67c2c6d3871de2b5';
+const JPEG_DECODER = 'https://cdn.jsdelivr.net/npm/@jsquash/jpeg@1.6.0/decode.js';
 const $ = id => document.getElementById(id);
 const video = $('video'), photo = $('photo');
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d', {willReadFrequently:true});
 let info, session, stream = null, generation = 0, busy = false, timer;
 let lastProbabilities = null, lastReferenceCheck = null;
+let jpegDecoder;
 function status(message, error=false) { $('status').textContent=message; $('status').classList.toggle('error',error); }
-async function json(url) { const response=await fetch(url); if(!response.ok) throw new Error(`${url}: HTTP ${response.status}`); return response.json(); }
+async function json(url) { const response=await fetch(url+(url.includes('?')?'&':'?')+'v='+MODEL_REVISION); if(!response.ok) throw new Error(`${url}: HTTP ${response.status}`); return response.json(); }
 function stopCamera() {
   generation++; clearTimeout(timer);
   if(stream) stream.getTracks().forEach(track=>track.stop());
@@ -87,7 +90,7 @@ function showSource(source) {
   $('source-state').textContent=source===video?'Live camera':'Photo';$('source-state').dataset.state='ready';
 }
 function preprocess(source) {
-  const w=source.videoWidth || source.naturalWidth, h=source.videoHeight || source.naturalHeight;
+  const w=source.videoWidth || source.naturalWidth || source.width, h=source.videoHeight || source.naturalHeight || source.height;
   if(!w || !h) throw new Error('The image is not ready yet.');
   const side=Math.min(w,h), size=info.input_size;
   ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
@@ -160,10 +163,33 @@ $('camera').addEventListener('click',async()=>{
 });
 $('stop').addEventListener('click',()=>{stopCamera();status('Camera stopped. Choose a photo or start it again.');});
 function loadImage(url) { return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('Could not decode this image. Try a JPEG or PNG photo.'));image.src=url;}); }
+async function loadPhoto(url) {
+  const response=await fetch(url);
+  if(!response.ok) throw new Error('Could not read the photo: HTTP '+response.status);
+  const bytes=await response.arrayBuffer(), signature=new Uint8Array(bytes,0,Math.min(2,bytes.byteLength));
+  if(signature[0]!==0xff || signature[1]!==0xd8) return loadImage(url);
+  // The same libjpeg-family WASM decoder in every browser avoids Safari's
+  // different native JPEG upsampling. No photograph leaves this device.
+  if(!jpegDecoder) jpegDecoder=import(JPEG_DECODER).then(module=>module.default).catch(()=>{jpegDecoder=null;throw new Error('The JPEG decoder could not load. Check your connection and try again.');});
+  const decode=await jpegDecoder;
+  const decoded=await decode(bytes,{preserveOrientation:true});
+  const image=document.createElement('canvas');image.width=decoded.width;image.height=decoded.height;
+  image.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(decoded.data),decoded.width,decoded.height),0,0);
+  return image;
+}
 async function showPhoto(url,token) {
-  const image=await loadImage(url);
+  const image=await loadPhoto(url);
   if(token!==generation) return null;
-  photo.src=url;showSource(photo);
+  if(image instanceof HTMLCanvasElement) {
+    // Keep a phone-sized preview instead of another full-resolution PNG copy.
+    const preview=document.createElement('canvas'), side=Math.min(image.width,image.height);
+    preview.width=preview.height=Math.min(1024,side);
+    preview.getContext('2d').drawImage(image,(image.width-side)/2,(image.height-side)/2,side,side,0,0,preview.width,preview.height);
+    photo.src=preview.toDataURL('image/png');
+  } else photo.src=url;
+  showSource(photo);
+  await photo.decode();
+  if(token!==generation) return null;
   const start=performance.now(), probabilities=await classify(image);
   if(token!==generation) return null;
   render(probabilities,performance.now()-start);return probabilities;
@@ -181,15 +207,14 @@ $('check').addEventListener('click',async()=>{
     status('Checking the supplied reference image…');
     const expected=await json('check_expected.json');
     const actual=await showPhoto('check_image.jpg',token);if(!actual) return;
-    // Native JPEG decoding differs between Safari and Pillow. Same-RGB tests
-    // match within 1e-5; this JPEG-aware bound is 0.2 percentage points.
-    const tolerance=0.002;
+    // Strict model check with browser-independent JPEG pixels.
+    const tolerance=0.00001;
     const errors=actual.map((p,i)=>Math.abs(p-expected[info.classes[i]]));
     const passed=errors.every(e=>Number.isFinite(e)&&e<=tolerance);
     const threeDecimalsMatch=actual.every((p,i)=>p.toFixed(3)===expected[info.classes[i]].toFixed(3));
     lastReferenceCheck={passed,tolerance,threeDecimalsMatch,actual:Object.fromEntries(info.classes.map((name,i)=>[name,actual[i]])),expected,maxAbsoluteError:Math.max(...errors)};
-    $('test-result').textContent=`JPEG tolerance: ${passed?'PASS':'FAIL'} · ${tolerance}\nThree-decimal match: ${threeDecimalsMatch?'PASS':'DIFFERS'}\nClass          Actual       Expected\n`+info.classes.map((name,i)=>`${name.padEnd(12)} ${actual[i].toFixed(8)}   ${expected[name].toFixed(8)}`).join('\n')+`\nMax absolute error: ${Math.max(...errors).toExponential(3)}`;
-    status(passed?(threeDecimalsMatch?'Reference check passed. Ready for your next leaf.':'Within JPEG tolerance; three-decimal values differ. See diagnostics.'):'Reference check failed. See the comparison below.',!passed);
+    $('test-result').textContent=`Strict model check: ${passed?'PASS':'FAIL'} · ${tolerance}\nThree-decimal match: ${threeDecimalsMatch?'PASS':'DIFFERS'}\nClass          Actual       Expected\n`+info.classes.map((name,i)=>`${name.padEnd(12)} ${actual[i].toFixed(8)}   ${expected[name].toFixed(8)}`).join('\n')+`\nMax absolute error: ${Math.max(...errors).toExponential(3)}\nJPEG: shared MozJPEG decoder (on-device)`;
+    status(passed&&threeDecimalsMatch?'Reference check passed. Ready for your next leaf.':'Reference check failed. See the comparison below.',!passed||!threeDecimalsMatch);
   } catch(error) {if(token===generation) {$('test-result').textContent='Reference check failed: '+error.message;status(error.message,true);}}
   finally {$('check').disabled=false;}
 });
@@ -217,7 +242,7 @@ async function init() {
     });
     ort.env.wasm.wasmPaths=ORT_CDN;
     ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
-    session=await ort.InferenceSession.create('leaf_model.onnx',{executionProviders:['wasm'],graphOptimizationLevel:'all'});
+    session=await ort.InferenceSession.create('leaf_model.onnx?v='+MODEL_REVISION,{executionProviders:['wasm'],graphOptimizationLevel:'all'});
     $('camera').disabled=$('upload').disabled=$('check').disabled=false;
     $('model-state').textContent='Ready';$('model-state').dataset.state='ready';
     status('Model ready · start the camera or choose a photo.');

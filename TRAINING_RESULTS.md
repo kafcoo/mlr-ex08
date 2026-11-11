@@ -1,5 +1,7 @@
 # Leaf lens: measured training comparison
 
+> **Archived first study.** This describes the original 12-run experiment and its previous checkpoint/JPEG behavior. The current model and resolved JPEG handling are documented in [NETWORK_RESULTS.md](NETWORK_RESULTS.md) and [release_info.json](release_info.json). Historical test scores below must not be attributed to the new release.
+
 Generated technical measurements, 11 November 2026. This records what ran and what was measured; it is not a claim of physical iPhone-camera accuracy.
 
 ## Result

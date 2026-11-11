@@ -1,0 +1,81 @@
+{
+  "decoder": "@jsquash/jpeg@1.6.0",
+  "referenceUnchanged": true,
+  "results": [
+    {
+      "browser": "webkit",
+      "fixtures": [
+        {
+          "exif": 1,
+          "exactPixels": true
+        },
+        {
+          "exif": 2,
+          "exactPixels": true
+        },
+        {
+          "exif": 3,
+          "exactPixels": true
+        },
+        {
+          "exif": 4,
+          "exactPixels": true
+        },
+        {
+          "exif": 5,
+          "exactPixels": true
+        },
+        {
+          "exif": 6,
+          "exactPixels": true
+        },
+        {
+          "exif": 7,
+          "exactPixels": true
+        },
+        {
+          "exif": 8,
+          "exactPixels": true
+        }
+      ]
+    },
+    {
+      "browser": "chromium",
+      "fixtures": [
+        {
+          "exif": 1,
+          "exactPixels": true
+        },
+        {
+          "exif": 2,
+          "exactPixels": true
+        },
+        {
+          "exif": 3,
+          "exactPixels": true
+        },
+        {
+          "exif": 4,
+          "exactPixels": true
+        },
+        {
+          "exif": 5,
+          "exactPixels": true
+        },
+        {
+          "exif": 6,
+          "exactPixels": true
+        },
+        {
+          "exif": 7,
+          "exactPixels": true
+        },
+        {
+          "exif": 8,
+          "exactPixels": true
+        }
+      ]
+    }
+  ],
+  "reference_sha256": "1ebfaf908c52808507f69ae97e9b63f05f84325cf11fec41531e588bf25f6316"
+}

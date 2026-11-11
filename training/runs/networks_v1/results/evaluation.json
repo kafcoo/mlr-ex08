@@ -1,0 +1,3578 @@
+{
+  "selection": {
+    "criterion": "mean of four development balanced accuracies; variant mean over seeds; median seed",
+    "baseline_dev_score": 0.7997767925262451,
+    "variant_summaries": [
+      {
+        "variant": "leaf_bn_geo",
+        "mean_dev_score": 0.7367704212665558,
+        "std_dev_score": 0.006639952473284835,
+        "seeds": 3
+      },
+      {
+        "variant": "leaf_gap_geo",
+        "mean_dev_score": 0.6998573889334997,
+        "std_dev_score": 0.03155642778710399,
+        "seeds": 3
+      },
+      {
+        "variant": "leaf_geo",
+        "mean_dev_score": 0.6846292118231455,
+        "std_dev_score": 0.014772738126795078,
+        "seeds": 3
+      },
+      {
+        "variant": "mobile_cosine",
+        "mean_dev_score": 0.813560277223587,
+        "std_dev_score": 0.00406434593523639,
+        "seeds": 3
+      },
+      {
+        "variant": "mobile_frozen",
+        "mean_dev_score": 0.7948288669188818,
+        "std_dev_score": 0.0028889974214187427,
+        "seeds": 3
+      },
+      {
+        "variant": "mobile_geo",
+        "mean_dev_score": 0.8035342295964559,
+        "std_dev_score": 0.008023351549288791,
+        "seeds": 3
+      },
+      {
+        "variant": "mobile_smoothing",
+        "mean_dev_score": 0.8313988149166107,
+        "std_dev_score": 0.006559601765088801,
+        "seeds": 3
+      }
+    ],
+    "selected_variant": "mobile_smoothing",
+    "selected_seed": 0,
+    "selected_checkpoint": "mobile_smoothing_seed0.pt",
+    "selected_architecture": "mobilenet_v3_small",
+    "evaluation_scope": "development only; new phone test pending",
+    "deploy_candidate": true,
+    "baseline_sha256": "22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a"
+  },
+  "models": [
+    {
+      "variant": "deployed_original",
+      "seed": null,
+      "dev_score": 0.7997767925262451,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.875,
+            0.5,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5005140962271855,
+          "confusion": [
+            [
+              7,
+              1,
+              0,
+              0
+            ],
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8394160866737366,
+          "balanced_accuracy": 0.8395089507102966,
+          "per_class_recall": [
+            0.9714285731315613,
+            0.5428571701049805,
+            1.0,
+            0.84375
+          ],
+          "cross_entropy": 0.4465899328245734,
+          "confusion": [
+            [
+              34,
+              1,
+              0,
+              0
+            ],
+            [
+              14,
+              19,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              1,
+              4,
+              27
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.75,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5125482493433459,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8905109763145447,
+          "balanced_accuracy": 0.8908482193946838,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.7714285850524902,
+            1.0,
+            0.90625
+          ],
+          "cross_entropy": 0.36268655053020393,
+          "confusion": [
+            [
+              31,
+              4,
+              0,
+              0
+            ],
+            [
+              7,
+              27,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              2,
+              0,
+              29
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_bn_geo",
+      "seed": 0,
+      "best_epoch": 13,
+      "dev_score": 0.7413566559553146,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.7222222089767456,
+          "per_class_recall": [
+            0.5,
+            1.0,
+            0.5,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.6903270852976832,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8321167826652527,
+          "balanced_accuracy": 0.8323661088943481,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.6000000238418579,
+            1.0,
+            0.84375
+          ],
+          "cross_entropy": 0.4900301912405195,
+          "confusion": [
+            [
+              31,
+              3,
+              0,
+              1
+            ],
+            [
+              10,
+              21,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              2,
+              1,
+              2,
+              27
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6551724076271057,
+          "balanced_accuracy": 0.6284722089767456,
+          "per_class_recall": [
+            0.375,
+            0.75,
+            0.5,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.8292711192163927,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              1,
+              1
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.7810218930244446,
+          "balanced_accuracy": 0.7823660969734192,
+          "per_class_recall": [
+            0.800000011920929,
+            0.5714285969734192,
+            0.9142857193946838,
+            0.84375
+          ],
+          "cross_entropy": 0.6075393927358362,
+          "confusion": [
+            [
+              28,
+              6,
+              0,
+              1
+            ],
+            [
+              9,
+              20,
+              2,
+              4
+            ],
+            [
+              0,
+              0,
+              32,
+              3
+            ],
+            [
+              2,
+              2,
+              1,
+              27
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_bn_geo",
+      "seed": 1,
+      "best_epoch": 14,
+      "dev_score": 0.7415736615657806,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.6551724076271057,
+          "balanced_accuracy": 0.625,
+          "per_class_recall": [
+            0.5,
+            0.5,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.6604873394143993,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8248175382614136,
+          "balanced_accuracy": 0.8258928656578064,
+          "per_class_recall": [
+            0.9714285731315613,
+            0.4571428596973419,
+            1.0,
+            0.875
+          ],
+          "cross_entropy": 0.44595324732091307,
+          "confusion": [
+            [
+              34,
+              1,
+              0,
+              0
+            ],
+            [
+              15,
+              16,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              2,
+              2,
+              0,
+              28
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.75,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.7199603113634833,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              5,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.7956204414367676,
+          "balanced_accuracy": 0.7966517806053162,
+          "per_class_recall": [
+            0.9142857193946838,
+            0.4571428596973419,
+            0.9714285731315613,
+            0.84375
+          ],
+          "cross_entropy": 0.536554169480818,
+          "confusion": [
+            [
+              32,
+              2,
+              0,
+              1
+            ],
+            [
+              14,
+              16,
+              0,
+              5
+            ],
+            [
+              0,
+              0,
+              34,
+              1
+            ],
+            [
+              1,
+              4,
+              0,
+              27
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_bn_geo",
+      "seed": 2,
+      "best_epoch": 14,
+      "dev_score": 0.7273809462785721,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.5862069129943848,
+          "balanced_accuracy": 0.5972222089767456,
+          "per_class_recall": [
+            0.375,
+            0.375,
+            0.75,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.7647325581517713,
+          "confusion": [
+            [
+              3,
+              4,
+              1,
+              0
+            ],
+            [
+              3,
+              3,
+              2,
+              0
+            ],
+            [
+              1,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8613138794898987,
+          "balanced_accuracy": 0.8629464507102966,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.6285714507102966,
+            1.0,
+            0.9375
+          ],
+          "cross_entropy": 0.41971156544929006,
+          "confusion": [
+            [
+              31,
+              4,
+              0,
+              0
+            ],
+            [
+              9,
+              22,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              1,
+              0,
+              30
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6206896305084229,
+          "balanced_accuracy": 0.6319444179534912,
+          "per_class_recall": [
+            0.375,
+            0.625,
+            0.75,
+            0.7777777910232544
+          ],
+          "cross_entropy": 0.8386409364897629,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              1,
+              5,
+              2,
+              0
+            ],
+            [
+              1,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              7
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8175182342529297,
+          "balanced_accuracy": 0.8174107074737549,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.6857143044471741,
+            0.9142857193946838,
+            0.8125
+          ],
+          "cross_entropy": 0.5277884511181908,
+          "confusion": [
+            [
+              30,
+              5,
+              0,
+              0
+            ],
+            [
+              7,
+              24,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              32,
+              3
+            ],
+            [
+              1,
+              4,
+              1,
+              26
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_gap_geo",
+      "seed": 0,
+      "best_epoch": 13,
+      "dev_score": 0.7197606563568115,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.7222222089767456,
+          "per_class_recall": [
+            0.5,
+            1.0,
+            0.5,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.7473674642628637,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.7518247961997986,
+          "balanced_accuracy": 0.7504464387893677,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.48571428656578064,
+            0.9428571462631226,
+            0.6875
+          ],
+          "cross_entropy": 0.5351326169758818,
+          "confusion": [
+            [
+              31,
+              4,
+              0,
+              0
+            ],
+            [
+              14,
+              17,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              33,
+              2
+            ],
+            [
+              4,
+              5,
+              1,
+              22
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.7222222089767456,
+          "per_class_recall": [
+            0.5,
+            1.0,
+            0.5,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.7606096596553408,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.6861313581466675,
+          "balanced_accuracy": 0.6841517686843872,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.4285714328289032,
+            0.8571428656578064,
+            0.59375
+          ],
+          "cross_entropy": 0.6947988802499144,
+          "confusion": [
+            [
+              30,
+              5,
+              0,
+              0
+            ],
+            [
+              17,
+              15,
+              0,
+              3
+            ],
+            [
+              1,
+              0,
+              30,
+              4
+            ],
+            [
+              6,
+              6,
+              1,
+              19
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_gap_geo",
+      "seed": 1,
+      "best_epoch": 12,
+      "dev_score": 0.7244977653026581,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.6896551847457886,
+          "balanced_accuracy": 0.65625,
+          "per_class_recall": [
+            0.5,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.7815340634050041,
+          "confusion": [
+            [
+              4,
+              3,
+              0,
+              1
+            ],
+            [
+              2,
+              5,
+              0,
+              1
+            ],
+            [
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8248175382614136,
+          "balanced_accuracy": 0.8252232074737549,
+          "per_class_recall": [
+            0.9142857193946838,
+            0.5428571701049805,
+            1.0,
+            0.84375
+          ],
+          "cross_entropy": 0.5388479580844405,
+          "confusion": [
+            [
+              32,
+              3,
+              0,
+              0
+            ],
+            [
+              12,
+              19,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              2,
+              3,
+              27
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6896551847457886,
+          "balanced_accuracy": 0.65625,
+          "per_class_recall": [
+            0.5,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.8828440699084051,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              0,
+              5,
+              0,
+              3
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.7591241002082825,
+          "balanced_accuracy": 0.7602678537368774,
+          "per_class_recall": [
+            0.8285714387893677,
+            0.4571428596973419,
+            0.9428571462631226,
+            0.8125
+          ],
+          "cross_entropy": 0.6274497874461822,
+          "confusion": [
+            [
+              29,
+              6,
+              0,
+              0
+            ],
+            [
+              14,
+              16,
+              0,
+              5
+            ],
+            [
+              0,
+              0,
+              33,
+              2
+            ],
+            [
+              2,
+              3,
+              1,
+              26
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_gap_geo",
+      "seed": 2,
+      "best_epoch": 10,
+      "dev_score": 0.6553137451410294,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.6206896305084229,
+          "balanced_accuracy": 0.6041666865348816,
+          "per_class_recall": [
+            0.25,
+            1.0,
+            0.5,
+            0.6666666865348816
+          ],
+          "cross_entropy": 0.7947704709809402,
+          "confusion": [
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              3,
+              0,
+              6
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.7299270033836365,
+          "balanced_accuracy": 0.729687511920929,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.6000000238418579,
+            0.8571428656578064,
+            0.71875
+          ],
+          "cross_entropy": 0.6201813064352439,
+          "confusion": [
+            [
+              26,
+              6,
+              0,
+              3
+            ],
+            [
+              11,
+              21,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              30,
+              5
+            ],
+            [
+              0,
+              8,
+              1,
+              23
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6206896305084229,
+          "balanced_accuracy": 0.6284722089767456,
+          "per_class_recall": [
+            0.25,
+            0.625,
+            0.75,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.7611389817862675,
+          "confusion": [
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              5,
+              0,
+              2
+            ],
+            [
+              0,
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.6569343209266663,
+          "balanced_accuracy": 0.6589285731315613,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.5142857432365417,
+            0.6285714507102966,
+            0.75
+          ],
+          "cross_entropy": 0.7891102394048315,
+          "confusion": [
+            [
+              26,
+              7,
+              0,
+              2
+            ],
+            [
+              12,
+              18,
+              0,
+              5
+            ],
+            [
+              0,
+              0,
+              22,
+              13
+            ],
+            [
+              1,
+              7,
+              0,
+              24
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_geo",
+      "seed": 0,
+      "best_epoch": 12,
+      "dev_score": 0.6860242933034897,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.6896551847457886,
+          "balanced_accuracy": 0.65625,
+          "per_class_recall": [
+            0.375,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.7922959820977573,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              2
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.7664233446121216,
+          "balanced_accuracy": 0.7674106955528259,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.4285714328289032,
+            0.9714285731315613,
+            0.8125
+          ],
+          "cross_entropy": 0.5390613514141445,
+          "confusion": [
+            [
+              30,
+              5,
+              0,
+              0
+            ],
+            [
+              14,
+              15,
+              0,
+              6
+            ],
+            [
+              0,
+              0,
+              34,
+              1
+            ],
+            [
+              0,
+              5,
+              1,
+              26
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6206896305084229,
+          "balanced_accuracy": 0.5972222089767456,
+          "per_class_recall": [
+            0.25,
+            0.75,
+            0.5,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.9000476968699488,
+          "confusion": [
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              2
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.7226277589797974,
+          "balanced_accuracy": 0.7232142686843872,
+          "per_class_recall": [
+            0.800000011920929,
+            0.5428571701049805,
+            0.800000011920929,
+            0.75
+          ],
+          "cross_entropy": 0.7094126095736983,
+          "confusion": [
+            [
+              28,
+              7,
+              0,
+              0
+            ],
+            [
+              11,
+              19,
+              0,
+              5
+            ],
+            [
+              1,
+              0,
+              28,
+              6
+            ],
+            [
+              2,
+              6,
+              0,
+              24
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_geo",
+      "seed": 1,
+      "best_epoch": 15,
+      "dev_score": 0.7019841223955154,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.6206896305084229,
+          "balanced_accuracy": 0.625,
+          "per_class_recall": [
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.8024890505034348,
+          "confusion": [
+            [
+              2,
+              5,
+              1,
+              0
+            ],
+            [
+              0,
+              4,
+              3,
+              1
+            ],
+            [
+              0,
+              0,
+              3,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.7518247961997986,
+          "balanced_accuracy": 0.7544642686843872,
+          "per_class_recall": [
+            0.800000011920929,
+            0.4285714328289032,
+            0.9142857193946838,
+            0.875
+          ],
+          "cross_entropy": 0.5837023484445837,
+          "confusion": [
+            [
+              28,
+              4,
+              1,
+              2
+            ],
+            [
+              12,
+              15,
+              0,
+              8
+            ],
+            [
+              0,
+              0,
+              32,
+              3
+            ],
+            [
+              2,
+              2,
+              0,
+              28
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6896551847457886,
+          "balanced_accuracy": 0.6909722089767456,
+          "per_class_recall": [
+            0.375,
+            0.75,
+            0.75,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.9242161717908136,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              6,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.7372262477874756,
+          "balanced_accuracy": 0.737500011920929,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.5142857432365417,
+            0.800000011920929,
+            0.75
+          ],
+          "cross_entropy": 0.7329479551663364,
+          "confusion": [
+            [
+              31,
+              3,
+              0,
+              1
+            ],
+            [
+              12,
+              18,
+              0,
+              5
+            ],
+            [
+              0,
+              0,
+              28,
+              7
+            ],
+            [
+              1,
+              6,
+              1,
+              24
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "leaf_geo",
+      "seed": 2,
+      "best_epoch": 14,
+      "dev_score": 0.6658792197704315,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.6551724076271057,
+          "balanced_accuracy": 0.65625,
+          "per_class_recall": [
+            0.25,
+            0.625,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.8613128662109375,
+          "confusion": [
+            [
+              2,
+              5,
+              1,
+              0
+            ],
+            [
+              1,
+              5,
+              2,
+              0
+            ],
+            [
+              1,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.7226277589797974,
+          "balanced_accuracy": 0.7232142686843872,
+          "per_class_recall": [
+            0.7714285850524902,
+            0.4571428596973419,
+            0.9142857193946838,
+            0.75
+          ],
+          "cross_entropy": 0.5639227428575502,
+          "confusion": [
+            [
+              27,
+              4,
+              3,
+              1
+            ],
+            [
+              16,
+              16,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              32,
+              3
+            ],
+            [
+              1,
+              6,
+              1,
+              24
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.6551724076271057,
+          "balanced_accuracy": 0.6284722089767456,
+          "per_class_recall": [
+            0.25,
+            0.875,
+            0.5,
+            0.8888888955116272
+          ],
+          "cross_entropy": 0.9792364054712756,
+          "confusion": [
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              7,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              8
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.6569343209266663,
+          "balanced_accuracy": 0.6555804014205933,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.5142857432365417,
+            0.7714285850524902,
+            0.59375
+          ],
+          "cross_entropy": 0.7523157579185319,
+          "confusion": [
+            [
+              26,
+              8,
+              0,
+              1
+            ],
+            [
+              12,
+              18,
+              0,
+              5
+            ],
+            [
+              0,
+              0,
+              27,
+              8
+            ],
+            [
+              3,
+              9,
+              1,
+              19
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_cosine",
+      "seed": 0,
+      "best_epoch": 13,
+      "dev_score": 0.8154017925262451,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.625,
+            0.875,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.9166924706820784,
+          "confusion": [
+            [
+              5,
+              3,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.9343065619468689,
+          "balanced_accuracy": 0.9357143044471741,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.8571428656578064,
+            1.0,
+            1.0
+          ],
+          "cross_entropy": 0.2959455382486765,
+          "confusion": [
+            [
+              31,
+              3,
+              0,
+              1
+            ],
+            [
+              4,
+              30,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.5,
+            0.875,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 1.0071157915838833,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8540145754814148,
+          "balanced_accuracy": 0.8571428656578064,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.7428571581840515,
+            0.9428571462631226,
+            1.0
+          ],
+          "cross_entropy": 0.434170702513117,
+          "confusion": [
+            [
+              26,
+              8,
+              0,
+              1
+            ],
+            [
+              7,
+              26,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              33,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_cosine",
+      "seed": 1,
+      "best_epoch": 9,
+      "dev_score": 0.8173549175262451,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.8275862336158752,
+          "balanced_accuracy": 0.78125,
+          "per_class_recall": [
+            0.75,
+            0.875,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.6943523143899852,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.9051094651222229,
+          "balanced_accuracy": 0.9064732193946838,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.800000011920929,
+            1.0,
+            0.96875
+          ],
+          "cross_entropy": 0.2945035433899747,
+          "confusion": [
+            [
+              30,
+              5,
+              0,
+              0
+            ],
+            [
+              6,
+              28,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              31
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.375,
+            1.0,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.8281779453672212,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8613138794898987,
+          "balanced_accuracy": 0.8629464507102966,
+          "per_class_recall": [
+            0.6285714507102966,
+            0.8857142925262451,
+            1.0,
+            0.9375
+          ],
+          "cross_entropy": 0.40191351671288483,
+          "confusion": [
+            [
+              22,
+              13,
+              0,
+              0
+            ],
+            [
+              3,
+              31,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              30
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_cosine",
+      "seed": 2,
+      "best_epoch": 15,
+      "dev_score": 0.8079241216182709,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.75,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5802260431750067,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.9051094651222229,
+          "balanced_accuracy": 0.9071428775787354,
+          "per_class_recall": [
+            0.8285714387893677,
+            0.800000011920929,
+            1.0,
+            1.0
+          ],
+          "cross_entropy": 0.3146481547695007,
+          "confusion": [
+            [
+              29,
+              6,
+              0,
+              0
+            ],
+            [
+              6,
+              28,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.75,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.6410028523412244,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8540145754814148,
+          "balanced_accuracy": 0.8558036088943481,
+          "per_class_recall": [
+            0.800000011920929,
+            0.7142857313156128,
+            0.9714285731315613,
+            0.9375
+          ],
+          "cross_entropy": 0.49510536750737766,
+          "confusion": [
+            [
+              28,
+              7,
+              0,
+              0
+            ],
+            [
+              9,
+              25,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              34,
+              1
+            ],
+            [
+              0,
+              0,
+              2,
+              30
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_frozen",
+      "seed": 0,
+      "best_epoch": 11,
+      "dev_score": 0.7986607104539871,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.625,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.6206943906586746,
+          "confusion": [
+            [
+              5,
+              3,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8321167826652527,
+          "balanced_accuracy": 0.8330357074737549,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.6857143044471741,
+            0.8857142925262451,
+            0.875
+          ],
+          "cross_entropy": 0.44608744913644166,
+          "confusion": [
+            [
+              31,
+              3,
+              0,
+              1
+            ],
+            [
+              8,
+              24,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              31,
+              4
+            ],
+            [
+              2,
+              0,
+              2,
+              28
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.8275862336158752,
+          "balanced_accuracy": 0.78125,
+          "per_class_recall": [
+            0.875,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5509786934688173,
+          "confusion": [
+            [
+              7,
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8613138794898987,
+          "balanced_accuracy": 0.8616071343421936,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.7142857313156128,
+            1.0,
+            0.875
+          ],
+          "cross_entropy": 0.4473031941991653,
+          "confusion": [
+            [
+              30,
+              4,
+              0,
+              1
+            ],
+            [
+              8,
+              25,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              3,
+              0,
+              28
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_frozen",
+      "seed": 1,
+      "best_epoch": 10,
+      "dev_score": 0.7916852682828903,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.75,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5637495764370622,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8102189898490906,
+          "balanced_accuracy": 0.8116071224212646,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.6000000238418579,
+            0.8857142925262451,
+            0.875
+          ],
+          "cross_entropy": 0.4718511043673884,
+          "confusion": [
+            [
+              31,
+              3,
+              0,
+              1
+            ],
+            [
+              10,
+              21,
+              0,
+              4
+            ],
+            [
+              1,
+              0,
+              31,
+              3
+            ],
+            [
+              2,
+              0,
+              2,
+              28
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.875,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5285545875286234,
+          "confusion": [
+            [
+              7,
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8540145754814148,
+          "balanced_accuracy": 0.8551339507102966,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.6571428775787354,
+            1.0,
+            0.90625
+          ],
+          "cross_entropy": 0.4441245489746985,
+          "confusion": [
+            [
+              30,
+              3,
+              1,
+              1
+            ],
+            [
+              10,
+              23,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              2,
+              0,
+              29
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_frozen",
+      "seed": 2,
+      "best_epoch": 11,
+      "dev_score": 0.7941406220197678,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.78125,
+          "per_class_recall": [
+            0.75,
+            0.625,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.4986814959295865,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              5,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8029196858406067,
+          "balanced_accuracy": 0.8044642806053162,
+          "per_class_recall": [
+            0.8857142925262451,
+            0.5428571701049805,
+            0.9142857193946838,
+            0.875
+          ],
+          "cross_entropy": 0.4597478861356304,
+          "confusion": [
+            [
+              31,
+              3,
+              0,
+              1
+            ],
+            [
+              12,
+              19,
+              0,
+              4
+            ],
+            [
+              0,
+              0,
+              32,
+              3
+            ],
+            [
+              2,
+              0,
+              2,
+              28
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.875,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5199943739792396,
+          "confusion": [
+            [
+              7,
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8394160866737366,
+          "balanced_accuracy": 0.8408482074737549,
+          "per_class_recall": [
+            0.8285714387893677,
+            0.6285714507102966,
+            1.0,
+            0.90625
+          ],
+          "cross_entropy": 0.47101708920332636,
+          "confusion": [
+            [
+              29,
+              4,
+              0,
+              2
+            ],
+            [
+              11,
+              22,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              2,
+              0,
+              29
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_geo",
+      "seed": 0,
+      "best_epoch": 13,
+      "dev_score": 0.8092076033353806,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.78125,
+          "per_class_recall": [
+            0.375,
+            1.0,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.5003103387766871,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8832116723060608,
+          "balanced_accuracy": 0.8837053775787354,
+          "per_class_recall": [
+            0.8285714387893677,
+            0.800000011920929,
+            1.0,
+            0.90625
+          ],
+          "cross_entropy": 0.3949290479186678,
+          "confusion": [
+            [
+              29,
+              6,
+              0,
+              0
+            ],
+            [
+              5,
+              28,
+              1,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              1,
+              2,
+              29
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7241379022598267,
+          "balanced_accuracy": 0.6875,
+          "per_class_recall": [
+            0.25,
+            1.0,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.7228705307533001,
+          "confusion": [
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8832116723060608,
+          "balanced_accuracy": 0.8843750357627869,
+          "per_class_recall": [
+            0.7142857313156128,
+            0.9142857193946838,
+            0.9714285731315613,
+            0.9375
+          ],
+          "cross_entropy": 0.5750248519173504,
+          "confusion": [
+            [
+              25,
+              9,
+              0,
+              1
+            ],
+            [
+              1,
+              32,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              34,
+              1
+            ],
+            [
+              0,
+              2,
+              0,
+              30
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_geo",
+      "seed": 1,
+      "best_epoch": 10,
+      "dev_score": 0.7921874970197678,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.875,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.7801607066187365,
+          "confusion": [
+            [
+              7,
+              1,
+              0,
+              0
+            ],
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8540145754814148,
+          "balanced_accuracy": 0.8571428656578064,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.6000000238418579,
+            0.9714285731315613,
+            1.0
+          ],
+          "cross_entropy": 0.5086626695319466,
+          "confusion": [
+            [
+              30,
+              5,
+              0,
+              0
+            ],
+            [
+              12,
+              21,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              34,
+              1
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.75,
+            0.625,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.8180528838058998,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8394160866737366,
+          "balanced_accuracy": 0.8428571224212646,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.6857143044471741,
+            0.9428571462631226,
+            1.0
+          ],
+          "cross_entropy": 0.799799379423587,
+          "confusion": [
+            [
+              26,
+              8,
+              0,
+              1
+            ],
+            [
+              9,
+              24,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              33,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_geo",
+      "seed": 2,
+      "best_epoch": 11,
+      "dev_score": 0.8092075884342194,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.625,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.8287276563973263,
+          "confusion": [
+            [
+              5,
+              3,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.9051094651222229,
+          "balanced_accuracy": 0.9071428775787354,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.8857142925262451,
+            1.0,
+            1.0
+          ],
+          "cross_entropy": 0.23819975196010004,
+          "confusion": [
+            [
+              26,
+              8,
+              1,
+              0
+            ],
+            [
+              3,
+              31,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.375,
+            1.0,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.9105049001759496,
+          "confusion": [
+            [
+              3,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              8,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8905109763145447,
+          "balanced_accuracy": 0.8921874761581421,
+          "per_class_recall": [
+            0.6857143044471741,
+            0.9142857193946838,
+            1.0,
+            0.96875
+          ],
+          "cross_entropy": 0.3960120208071966,
+          "confusion": [
+            [
+              24,
+              10,
+              1,
+              0
+            ],
+            [
+              2,
+              32,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              31
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_smoothing",
+      "seed": 0,
+      "best_epoch": 14,
+      "dev_score": 0.8276227712631226,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.75,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.5102189820388268,
+          "confusion": [
+            [
+              6,
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.8686131238937378,
+          "balanced_accuracy": 0.8700892925262451,
+          "per_class_recall": [
+            0.9142857193946838,
+            0.6285714507102966,
+            1.0,
+            0.9375
+          ],
+          "cross_entropy": 0.411241256842648,
+          "confusion": [
+            [
+              32,
+              3,
+              0,
+              0
+            ],
+            [
+              12,
+              22,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              0,
+              1,
+              30
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.8275862336158752,
+          "balanced_accuracy": 0.8125,
+          "per_class_recall": [
+            0.625,
+            0.875,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.4487499039748619,
+          "confusion": [
+            [
+              5,
+              3,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8759124279022217,
+          "balanced_accuracy": 0.8779017925262451,
+          "per_class_recall": [
+            0.8571428656578064,
+            0.6857143044471741,
+            1.0,
+            0.96875
+          ],
+          "cross_entropy": 0.3874267487630357,
+          "confusion": [
+            [
+              30,
+              5,
+              0,
+              0
+            ],
+            [
+              9,
+              24,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              31
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_smoothing",
+      "seed": 1,
+      "best_epoch": 14,
+      "dev_score": 0.8259486705064774,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.75,
+          "per_class_recall": [
+            0.625,
+            0.875,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.6748041613348599,
+          "confusion": [
+            [
+              5,
+              3,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.9343065619468689,
+          "balanced_accuracy": 0.9357143044471741,
+          "per_class_recall": [
+            0.9714285731315613,
+            0.7714285850524902,
+            1.0,
+            1.0
+          ],
+          "cross_entropy": 0.27017344719302044,
+          "confusion": [
+            [
+              34,
+              1,
+              0,
+              0
+            ],
+            [
+              7,
+              27,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7586206793785095,
+          "balanced_accuracy": 0.71875,
+          "per_class_recall": [
+            0.625,
+            0.75,
+            0.5,
+            1.0
+          ],
+          "cross_entropy": 0.8297457201727505,
+          "confusion": [
+            [
+              5,
+              3,
+              0,
+              0
+            ],
+            [
+              2,
+              6,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8978102207183838,
+          "balanced_accuracy": 0.8993303775787354,
+          "per_class_recall": [
+            0.9142857193946838,
+            0.7428571581840515,
+            0.9714285731315613,
+            0.96875
+          ],
+          "cross_entropy": 0.405653647697755,
+          "confusion": [
+            [
+              32,
+              3,
+              0,
+              0
+            ],
+            [
+              7,
+              26,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              34,
+              1
+            ],
+            [
+              1,
+              0,
+              0,
+              31
+            ]
+          ],
+          "count": 137
+        }
+      }
+    },
+    {
+      "variant": "mobile_smoothing",
+      "seed": 2,
+      "best_epoch": 11,
+      "dev_score": 0.8406250029802322,
+      "metrics": {
+        "original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.78125,
+          "per_class_recall": [
+            0.5,
+            0.875,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.5448360114262022,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "historical_dev": {
+          "accuracy": 0.9124087691307068,
+          "balanced_accuracy": 0.9142857193946838,
+          "per_class_recall": [
+            0.800000011920929,
+            0.8571428656578064,
+            1.0,
+            1.0
+          ],
+          "cross_entropy": 0.2614121049860098,
+          "confusion": [
+            [
+              28,
+              7,
+              0,
+              0
+            ],
+            [
+              4,
+              30,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        },
+        "camera_original_val": {
+          "accuracy": 0.7931034564971924,
+          "balanced_accuracy": 0.78125,
+          "per_class_recall": [
+            0.5,
+            0.875,
+            0.75,
+            1.0
+          ],
+          "cross_entropy": 0.5549020438358702,
+          "confusion": [
+            [
+              4,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              3,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9
+            ]
+          ],
+          "count": 29
+        },
+        "camera_historical_dev": {
+          "accuracy": 0.8832116723060608,
+          "balanced_accuracy": 0.8857142925262451,
+          "per_class_recall": [
+            0.7428571581840515,
+            0.800000011920929,
+            1.0,
+            1.0
+          ],
+          "cross_entropy": 0.3103681707034146,
+          "confusion": [
+            [
+              26,
+              9,
+              0,
+              0
+            ],
+            [
+              5,
+              28,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              32
+            ]
+          ],
+          "count": 137
+        }
+      }
+    }
+  ]
+}

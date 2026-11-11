@@ -1,0 +1,15 @@
+{
+  "variant": "mobile_smoothing",
+  "seed": 0,
+  "architecture": "mobilenet_v3_small",
+  "model_sha256": "67c2c6d3871de2b590350e04ea6aef0dbd87233ec4c3b365031142252bfce485",
+  "model_bytes": 6097584,
+  "opset": 17,
+  "max_logit_error": 2.1457672119140625e-06,
+  "reference_probabilities": {
+    "apple": 0.5251854062080383,
+    "cherry": 0.4512040913105011,
+    "chestnut": 0.01689339615404606,
+    "maple": 0.006717146374285221
+  }
+}

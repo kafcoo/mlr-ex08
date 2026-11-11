@@ -1,0 +1,14 @@
+{
+  "run_dir": "training/runs/networks_v1",
+  "variant": "mobile_smoothing",
+  "architecture": "mobilenet_v3_small",
+  "seed": 0,
+  "model_sha256": "67c2c6d3871de2b590350e04ea6aef0dbd87233ec4c3b365031142252bfce485",
+  "model_bytes": 6097584,
+  "evaluation_scope": "development only; new phone test pending",
+  "physical_phone_test_pending": true,
+  "selection_rule": "mean of four development balanced accuracies; variant mean over seeds; median seed",
+  "prior_model_sha256": "22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a",
+  "jpeg_decoder": "@jsquash/jpeg@1.6.0",
+  "reference_absolute_tolerance": 1e-05
+}

@@ -9,3 +9,4 @@ data/
 __pycache__/
 training/checkpoints/
 training/runs/**/checkpoints/
+exports/

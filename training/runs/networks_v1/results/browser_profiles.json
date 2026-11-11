@@ -1,0 +1,105 @@
+{
+  "scope": "Desktop Mac, single-thread ONNX WASM; NOT physical phone timing",
+  "warmupRuns": 5,
+  "measuredRuns": 20,
+  "results": [
+    {
+      "browser": "webkit",
+      "variant": "leaf_bn_geo",
+      "medianMs": 2,
+      "p90Ms": 2.0000000000004547,
+      "maxProbabilityError": 3.023911763211373e-7
+    },
+    {
+      "browser": "webkit",
+      "variant": "leaf_gap_geo",
+      "medianMs": 2,
+      "p90Ms": 2.0000000000004547,
+      "maxProbabilityError": 9.771528095003923e-8
+    },
+    {
+      "browser": "webkit",
+      "variant": "leaf_geo",
+      "medianMs": 2,
+      "p90Ms": 2,
+      "maxProbabilityError": 2.3434072904393588e-8
+    },
+    {
+      "browser": "webkit",
+      "variant": "mobile_cosine",
+      "medianMs": 3,
+      "p90Ms": 3,
+      "maxProbabilityError": 0.000001751171592734302
+    },
+    {
+      "browser": "webkit",
+      "variant": "mobile_frozen",
+      "medianMs": 3,
+      "p90Ms": 3,
+      "maxProbabilityError": 0.0000021530809466430156
+    },
+    {
+      "browser": "webkit",
+      "variant": "mobile_geo",
+      "medianMs": 3,
+      "p90Ms": 3.0000000000004547,
+      "maxProbabilityError": 4.221832224371447e-7
+    },
+    {
+      "browser": "webkit",
+      "variant": "mobile_smoothing",
+      "medianMs": 3,
+      "p90Ms": 3,
+      "maxProbabilityError": 0.000004121982266847013
+    },
+    {
+      "browser": "chromium",
+      "variant": "leaf_bn_geo",
+      "medianMs": 1.850000023841858,
+      "p90Ms": 2.100000023841858,
+      "maxProbabilityError": 3.023911763211373e-7
+    },
+    {
+      "browser": "chromium",
+      "variant": "leaf_gap_geo",
+      "medianMs": 1.899999976158142,
+      "p90Ms": 2.100000023841858,
+      "maxProbabilityError": 9.771528095003923e-8
+    },
+    {
+      "browser": "chromium",
+      "variant": "leaf_geo",
+      "medianMs": 1.7999999523162842,
+      "p90Ms": 1.8000000715255737,
+      "maxProbabilityError": 2.3434072904393588e-8
+    },
+    {
+      "browser": "chromium",
+      "variant": "mobile_cosine",
+      "medianMs": 3,
+      "p90Ms": 3,
+      "maxProbabilityError": 0.000001751171592734302
+    },
+    {
+      "browser": "chromium",
+      "variant": "mobile_frozen",
+      "medianMs": 3,
+      "p90Ms": 3.0999999046325684,
+      "maxProbabilityError": 0.0000021530809466430156
+    },
+    {
+      "browser": "chromium",
+      "variant": "mobile_geo",
+      "medianMs": 3.199999988079071,
+      "p90Ms": 3.399999976158142,
+      "maxProbabilityError": 4.221832224371447e-7
+    },
+    {
+      "browser": "chromium",
+      "variant": "mobile_smoothing",
+      "medianMs": 3.299999952316284,
+      "p90Ms": 3.4000000953674316,
+      "maxProbabilityError": 0.000004121982266847013
+    }
+  ]
+}

@@ -70,7 +70,7 @@ def main():
     reference = "\n".join(f"| {name} | {prob:.10f} |" for name, prob in exported["reference_probabilities"].items())
     text = f"""# Leaf lens: measured training comparison
 
-Generated technical measurements, 11 November 2026. This records what ran and what was measured; it is not a claim of physical iPhone-camera accuracy.
+Archived first-study technical measurements, 11 November 2026. These 12 runs describe the previous checkpoint and its original JPEG behavior. See [NETWORK_RESULTS.md](NETWORK_RESULTS.md) and [release_info.json](release_info.json) for the current model and resolved JPEG pipeline. Historical test scores below must not be attributed to the new release.
 
 ## Result
 

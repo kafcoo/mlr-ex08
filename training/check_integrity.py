@@ -77,7 +77,9 @@ def main():
     info = json.loads(Path("model_info.json").read_text())
     metadata = {entry.key: entry.value for entry in model.metadata_props}
     assert json.loads(metadata["model_info"]) == info
-    export = json.loads((results / "export.json").read_text())
+    release_path = Path("release_info.json")
+    release_run = Path(json.loads(release_path.read_text())["run_dir"]) if release_path.exists() else Path("training")
+    export = json.loads((release_run / "results/export.json").read_text())
     assert hashlib.sha256(model_path.read_bytes()).hexdigest() == export["model_sha256"]
     assert model_path.stat().st_size == export["model_bytes"]
     image = np.asarray(Image.open("check_image.jpg").convert("RGB"), dtype=np.float32) / 255

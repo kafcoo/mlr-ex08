@@ -1,0 +1,65 @@
+{
+  "architecture": "mobilenet_v3_small",
+  "weights": "IMAGENET1K_V1",
+  "input_size": 96,
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "batch_size": 32,
+  "epochs": 15,
+  "device": "mps",
+  "data_sha256": "011525a24a5651188daf7a0c68a5e7e2de92674726e2e10dade7d3f60c83d80e",
+  "torch_version": "2.9.1",
+  "torchvision_version": "0.24.1",
+  "geometry": {
+    "crop_scale": [
+      0.7,
+      1.0
+    ],
+    "rotation": 20,
+    "horizontal_flip": true,
+    "vertical_flip": true
+  },
+  "color_jitter": {
+    "brightness": 0.25,
+    "contrast": 0.25,
+    "saturation": 0.2,
+    "hue": 0.03
+  },
+  "network_variants": {
+    "mobile_geo": {
+      "architecture": "mobilenet_v3_small"
+    },
+    "mobile_frozen": {
+      "architecture": "mobilenet_v3_small",
+      "frozen": true
+    },
+    "mobile_cosine": {
+      "architecture": "mobilenet_v3_small",
+      "cosine": true
+    },
+    "mobile_smoothing": {
+      "architecture": "mobilenet_v3_small",
+      "smoothing": 0.05
+    },
+    "leaf_geo": {
+      "architecture": "leafnet"
+    },
+    "leaf_bn_geo": {
+      "architecture": "leafnet_bn"
+    },
+    "leaf_gap_geo": {
+      "architecture": "leafnet_bn_gap"
+    }
+  },
+  "network_source_sha256": "adc5aea130e6605ef5c60bfefe8afb408930fcd88c5eacf4a2c73f56a08f0f18"
+}

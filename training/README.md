@@ -1,64 +1,66 @@
 # Reproducing the leaf experiments
 
-These scripts retain the notebook's readable MobileNetV3-small training loop and 96 × 96 RGB inputs. No training framework is added. Run commands from the repository root, using Python 3.12.
+Use Python 3.12 and run commands from the repository root. These scripts retain the notebook's readable PyTorch loop. `networks.py` contains the Task 3 LeafNet/LeafNetBN, a small GAP option, and the existing MobileNet baseline. There is no new training framework.
 
-## Data
-
-Keep the original 107 training and 29 validation photos in `data/leaves/{train,val}/{apple,cherry,chestnut,maple}`. They are local inputs and are not published with this repository.
-
-Download [the historical ZIP](https://raw.githubusercontent.com/tomasvicar/MLR-public/master/exercises/data/ex08_leaves_images.zip) and extract it inside `data/historical`, producing `data/historical/leaves/train` and `data/historical/leaves/val`. The [exercise](https://tomasvicar.github.io/MLR-public/exercises/ex08.html) describes it as photographs from other students and phones in previous years. Its `source_files.csv` preserves provenance.
-
-## Commands
+## Environment and data
 
 ```sh
 python3 -m venv --system-site-packages .venv
 source .venv/bin/activate
 pip install -r training/requirements.txt
-python training/prepare_data.py
-python -u training/train.py --run-dir training/runs/reproduce --seeds 0 1 2 --epochs 15
-# Recover the fixed original Task 2 baseline; verify its SHA-256 during evaluation.
-mkdir -p training/checkpoints
-curl -fL https://raw.githubusercontent.com/kafcoo/mlr-ex08/1029091ee246182edfd05f3d7c006b1812e2d84e/leaf_model.onnx -o training/checkpoints/original.onnx
-python training/evaluate.py --run-dir training/runs/reproduce
-python training/export_model.py --run-dir training/runs/reproduce --output-dir .local-tools/reproduced-export
 ```
 
-`prepare_data.py` creates `data/clean` and writes [the data audit](results/data_audit.json). It hashes decoded RGB pixels, excludes every member of groups with conflicting labels, and deduplicates the rest. Validation takes priority over training, so overlapping training copies are excluded. It reserves 20% of the remaining historical training pictures per class for development, using seed 2026. The original validation pictures are a second development source. The historical validation set is reserved for the final test. Original source images are never modified.
+For the complete notebook as well, install `training/notebook-requirements.txt` and select that environment as its kernel. The source notebook stays local; its Task 3 definitions are the source for `check_networks.py` parity tests.
 
-It also creates fixed camera-like development and test copies, using seed 314159, moderate crops, rotations and colour changes. These are synthetic robustness checks, not actual camera measurements or additional independent samples.
+Keep the original 107 train / 29 validation images in `data/leaves/{train,val}/{apple,cherry,chestnut,maple}`. Extract [the historical archive](https://raw.githubusercontent.com/tomasvicar/MLR-public/master/exercises/data/ex08_leaves_images.zip) into `data/historical`, producing `data/historical/leaves/{train,val}`. Original photos and checkpoints are not published.
 
-`train.py` compares four variants, one change at a time:
+`prepare_data.py` hashes decoded RGB pixels, removes duplicates, excludes conflicting labels, keeps validation copies over overlapping train copies and reserves a fixed 20% historical dev split (seed 2026). Camera-like copies are generated once (seed 314159). The resulting counts are 649 train, 29 original dev, 137 historical dev, and 120 historical test. This existing `data/clean` is unchanged in the new study. Before adding other source data, isolate its prepared folders and audit rather than replacing the archived study's manifest.
 
-1. `original_only`: original training data, pretrained MobileNetV3-small fine-tuned end to end.
-2. `expanded_only`: add the cleaned historical training photos.
-3. `expanded_geo`: also use random crops, flips and rotations.
-4. `expanded_color`: also use colour jitter.
-
-All variants use the same architecture, input normalization, batch size 32, cross-entropy loss, Adam at 0.001 and 15 epochs. Each seed resets the pretrained network, replacement head and random generators. Development results select the best checkpoint. Four development balanced accuracies (original/historical × clean/camera-like) receive equal weight, avoiding dominance by the larger source. Cross-entropy breaks ties. The final test is never used by the training loop.
-
-Results are saved after each completed run. A run is skipped only if its matching checkpoint and recorded protocol exist. `protocol.json` fingerprints the actual training/development image files, transforms, versions, device and optimizer settings; test files are not read to compute it. Missing weights cause retraining. Changed settings/data are rejected in the same run directory. The original `training/results` records are archived: use a separate `--run-dir` for another experiment. MPS is used when available; `--device cpu` forces CPU. Fixed seeds control inputs and initialization; exact bitwise MPS reproducibility across hardware/software is not guaranteed.
-
-`evaluate.py` compares mean development scores across seeds and persists the selection **before** running any final-test inference. It chooses the middle seed by development score. It requires an explicit existing baseline with matching SHA-256 and checks that every required checkpoint exists before test inference. It never substitutes the current deployed model for a missing original baseline. The fixed original SHA-256 is `ae31c68aa9920808565fed2eaf50164647f90887b396a9fafe02fb9e4f034f7f`. For a consciously changed future baseline, pass both `--baseline` and `--baseline-sha256` and label the comparison accordingly.
-
-`export_model.py` exports the selected checkpoint to opset 17, embeds `model_info` in ONNX as in Task 2e, checks the graph and compares ONNX Runtime against PyTorch on the reference image and five random inputs. It writes all four companion files and `ex08_for_agent.zip` into `--output-dir`. The default output is the repository root, so use a separate output directory for experiments. The reference JPEG stays unchanged. The original model remains recoverable from the initial Git commits.
-
-## Verification and student-owned work
+## New 21-run study
 
 ```sh
-# Requires the local original/clean data and current root export bundle.
-python training/check_integrity.py
-# Short CPU smoke test in a temporary directory; does not retrain the archived study.
-python training/test_reproducibility.py
+python training/train.py --run-dir training/runs/networks_reproduce --variants mobile_geo mobile_frozen mobile_cosine mobile_smoothing leaf_geo leaf_bn_geo leaf_gap_geo --seeds 0 1 2 --epochs 15
+mkdir -p training/checkpoints
+curl -fL https://raw.githubusercontent.com/kafcoo/mlr-ex08/0303611e72702491b5e38114620f30c72a9ea7c5/leaf_model.onnx -o training/checkpoints/before_networks.onnx
+python training/evaluate.py --run-dir training/runs/networks_reproduce --baseline training/checkpoints/before_networks.onnx --baseline-sha256 22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a --dev-only
+python training/export_model.py --run-dir training/runs/networks_reproduce --output-dir exports/candidate
 ```
 
-[AUDIT.md](../AUDIT.md) records requirement coverage, the unchanged notebook's clean execution, open defects and the proposed next experiment matrix. The original notebook has a Task 3d bug: its loop consumes `my_train_loader`, although `aug_train_loader` was created. This must be corrected and rerun by the student; the historical Task 4 MobileNet runs are independent of that notebook loop.
+Use a new run directory for reproduction. The archived result JSONs are not weights. A run resumes only if its checkpoint and matching protocol exist; otherwise missing weights trigger training. Changed data/settings are rejected in the same directory. Protocol fingerprints cover actual train/dev images, versions, transforms and architecture source. Fixed seeds control initialization and sampling; MPS is not guaranteed bitwise-identical across hardware/software.
 
-The browser now distinguishes **JPEG tolerance PASS** from **three-decimal agreement**. WebKit passes the former but currently differs on the latter; the lossless same-RGB fixture confirms the numerical model/preprocessing path. Do not claim this fulfils the native-JPEG three-decimal check without recording the discrepancy in your own review.
+All seven variants use geometric augmentation, Adam 0.001, batch 32 and 15 epochs. `mobile_frozen` trains only 4,100 final-layer parameters, freezing BN statistics and dropout too. `mobile_cosine` changes only the schedule; `mobile_smoothing` changes only training-label smoothing to 0.05. `leaf_bn_geo` adds BN to Task 3 LeafNet; `leaf_gap_geo` replaces flattening with a spatial mean and adjusts fc input size. MobileNet is ImageNet-pretrained; the custom networks start from scratch, so this comparison does not isolate architecture from pretraining.
 
-The student must write `REVIEW.md` and `REPORT.md`, attach a real phone screenshot, and try the export in the course camera app. Agent-generated technical records do not replace those files. Execute the notebook in a separate working directory: its original Task 2 export cells overwrite the root model/reference files if run from the repository root.
+Best checkpoints use the mean of four development balanced accuracies (original/historical × clean/camera-like). Variant selection uses the mean over three seeds; the representative seed is the middle dev-scoring seed. `--dev-only` never builds or reads historical test loaders. Historical test results were already examined in the first study, so new confirmatory claims need a new phone/session test.
 
-## Limits
+## Original four-recipe study
 
-Exact-pixel duplicate removal does not identify every photograph of the same physical leaf or near-duplicate image. The archive has no reliable plant/session identifiers for a complete group split. The historical 120-image test has now been examined; future model changes need a new independent phone/session test for confirmatory results. Development-set selection and the small original validation set also limit certainty. The app's uncertainty indicator is a fixed heuristic, not a trained fifth class or a guarantee of detecting unfamiliar plants.
+The original 12 runs remain in `training/results`; do not overwrite them. Reproduce elsewhere with default variants:
 
-These are technical measurements generated during development; the course's student-authored discussion should use your own interpretation of the results.
+```sh
+python training/train.py --run-dir training/runs/original_reproduce --seeds 0 1 2 --epochs 15
+curl -fL https://raw.githubusercontent.com/kafcoo/mlr-ex08/1029091ee246182edfd05f3d7c006b1812e2d84e/leaf_model.onnx -o training/checkpoints/original.onnx
+python training/evaluate.py --run-dir training/runs/original_reproduce --baseline training/checkpoints/original.onnx
+```
+
+The fixed original SHA-256 is `ae31c68aa9920808565fed2eaf50164647f90887b396a9fafe02fb9e4f034f7f`. The evaluator refuses a missing or wrong baseline rather than silently copying the current released model. That study compares original data, added historical train data, geometry, then ColorJitter. Its historical test results are archival; repeating inference does not create a fresh independent test.
+
+## Export, tests and release
+
+`export_model.py` writes model, metadata, reference probabilities and a four-file ZIP into `--output-dir` (default root). It embeds `model_info` inside ONNX, checks the graph and compares ONNX Runtime against PyTorch on the unchanged JPEG plus five fixed random inputs. The released model's study/seed/SHA is in root `release_info.json`; update this provenance and the HTML's model revision together before publishing another model. Use an isolated candidate folder and verify first.
+
+```sh
+python training/check_integrity.py
+python training/test_reproducibility.py
+python training/check_networks.py
+python training/check_new_study.py
+```
+
+The integrity checks need local original/clean data and the current root export ZIP. Network parity checks also need the local corrected notebook. `profile_networks.py` exports representative candidates for local browser parity/timing tests; all checkpoint files remain ignored. Measured WASM times are desktop Mac timings, not iPhone timings.
+
+## Notebook, JPEG and student work
+
+The user-authorized corrected notebook uses the augmented loader, seeded shuffle and filtered image extensions. It passed 29/29 cells and 14/14 semantic checks. Its original version is backed up locally. Task 2 exports into `exports/task2/`; the original archived notebook would overwrite root exports, so audits continue to run in an isolated working directory.
+
+The page uses one pinned MozJPEG/WASM decoder for JPEG uploads, including EXIF rotation/mirroring. The unchanged reference passes strict 1e-5 probability tolerance and three-decimal agreement in both WebKit and Chrome; all eight EXIF orientations match Pillow pixels. Camera frames are already decoded. The extra library/WASM downloads from the CDN, but photos remain on the device.
+
+See [NETWORK_RESULTS.md](../NETWORK_RESULTS.md), [REPORT_DRAFT.md](../REPORT_DRAFT.md), [REVIEW_DRAFT.md](../REVIEW_DRAFT.md) and [AUDIT.md](../AUDIT.md). The student must add real phone results, a screenshot, their own final interpretation and the required final review/report. Drafts deliberately do not invent those observations. The course deadline remains 48 hours after the lab.

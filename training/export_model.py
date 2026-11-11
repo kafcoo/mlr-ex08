@@ -15,6 +15,7 @@ from torch import nn
 from torchvision import models, transforms
 
 from train import MEAN, STD, RESULTS, CHECKPOINTS
+from networks import build_model
 
 
 def main():
@@ -29,8 +30,8 @@ def main():
     if not selection["deploy_candidate"]:
         raise SystemExit("No candidate improves development score; keep the original model.")
     torch.set_num_threads(4)
-    model = models.mobilenet_v3_small(weights=None)
-    model.classifier[3] = nn.Linear(model.classifier[3].in_features, 4)
+    architecture = selection.get("selected_architecture", "mobilenet_v3_small")
+    model = build_model(architecture)
     model.load_state_dict(torch.load(checkpoints / selection["selected_checkpoint"], weights_only=True, map_location="cpu"))
     model.eval()
     temporary = checkpoints / "candidate.onnx"
@@ -76,7 +77,7 @@ def main():
     # Lossless RGB fixture isolates browser JPEG decoding from model arithmetic.
     image = Image.open("check_image.jpg").convert("RGB")
     Image.frombytes("RGB", image.size, image.tobytes()).save(results / "reference_pixels.png")
-    export = dict(variant=selection["selected_variant"], seed=selection["selected_seed"],
+    export = dict(variant=selection["selected_variant"], seed=selection["selected_seed"], architecture=architecture,
                   model_sha256=hashlib.sha256(temporary.read_bytes()).hexdigest(), model_bytes=temporary.stat().st_size,
                   opset=17, max_logit_error=max_error, reference_probabilities=dict(zip(classes, map(float, reference))))
     (results / "export.json").write_text(json.dumps(export, indent=2) + "\n")

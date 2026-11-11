@@ -1,0 +1,28 @@
+[
+  {
+    "browser": "webkit",
+    "status": "PASS",
+    "sourcePixels": 12192768,
+    "previewWidth": 1024,
+    "previewHeight": 1024,
+    "probabilities": [
+      0.22331944894250685,
+      0.7161173265894113,
+      0.04586798047789607,
+      0.01469524399018594
+    ]
+  },
+  {
+    "browser": "chromium",
+    "status": "PASS",
+    "sourcePixels": 12192768,
+    "previewWidth": 1024,
+    "previewHeight": 1024,
+    "probabilities": [
+      0.4472016342539596,
+      0.4934504495287219,
+      0.04031642605001427,
+      0.019031490167304217
+    ]
+  }
+]

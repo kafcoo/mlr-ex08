@@ -8,5 +8,5 @@
     "Current ONNX graph, embedded/JSON metadata, SHA-256, NCHW and reference probabilities",
     "Export ZIP contains the exact current model and all three companion files"
   ],
-  "model_sha256": "22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a"
+  "model_sha256": "67c2c6d3871de2b590350e04ea6aef0dbd87233ec4c3b365031142252bfce485"
 }

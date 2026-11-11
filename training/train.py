@@ -12,6 +12,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import datasets, models, transforms
+from networks import build_model
 
 MEAN = [.485, .456, .406]
 STD = [.229, .224, .225]
@@ -19,6 +20,15 @@ EVAL_SETS = ["original_val", "historical_dev", "camera_original_val", "camera_hi
 ROOT = Path("data/clean")
 RESULTS = Path("training/results")
 CHECKPOINTS = Path("training/checkpoints")
+NETWORK_VARIANTS = {
+    "mobile_geo": dict(architecture="mobilenet_v3_small"),
+    "mobile_frozen": dict(architecture="mobilenet_v3_small", frozen=True),
+    "mobile_cosine": dict(architecture="mobilenet_v3_small", cosine=True),
+    "mobile_smoothing": dict(architecture="mobilenet_v3_small", smoothing=.05),
+    "leaf_geo": dict(architecture="leafnet"),
+    "leaf_bn_geo": dict(architecture="leafnet_bn"),
+    "leaf_gap_geo": dict(architecture="leafnet_bn_gap"),
+}
 
 
 def evaluate(model, loader, device):
@@ -40,7 +50,7 @@ def evaluate(model, loader, device):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--variants", nargs="+", choices=["original_only", "expanded_only", "expanded_geo", "expanded_color"], default=["original_only", "expanded_only", "expanded_geo", "expanded_color"])
+    parser.add_argument("--variants", nargs="+", choices=["original_only", "expanded_only", "expanded_geo", "expanded_color"] + list(NETWORK_VARIANTS), default=["original_only", "expanded_only", "expanded_geo", "expanded_color"])
     parser.add_argument("--seeds", nargs="+", type=int, default=[0, 1, 2])
     parser.add_argument("--epochs", type=int, default=15)
     parser.add_argument("--device", default="mps" if torch.backends.mps.is_available() else "cpu")
@@ -69,6 +79,9 @@ def main():
                     torch_version=torch.__version__, torchvision_version=__import__("torchvision").__version__,
                     geometry=dict(crop_scale=[.7, 1.], rotation=20, horizontal_flip=True, vertical_flip=True),
                     color_jitter=dict(brightness=.25, contrast=.25, saturation=.2, hue=.03))
+    if any(name in NETWORK_VARIANTS for name in args.variants):
+        protocol["network_variants"] = NETWORK_VARIANTS
+    protocol["network_source_sha256"] = hashlib.sha256(Path(__file__).with_name("networks.py").read_bytes()).hexdigest()
     protocol_path = run_dir / "protocol.json"
     if protocol_path.exists():
         if json.loads(protocol_path.read_text()) != protocol:
@@ -99,7 +112,7 @@ def main():
             if device.type == "mps":
                 torch.mps.manual_seed(seed)
             augment = []
-            if variant in ["expanded_geo", "expanded_color"]:
+            if variant in ["expanded_geo", "expanded_color"] or variant in NETWORK_VARIANTS:
                 augment = [transforms.RandomResizedCrop(96, scale=(.7, 1.0)),
                            transforms.RandomHorizontalFlip(), transforms.RandomVerticalFlip(),
                            transforms.RandomRotation(20)]
@@ -109,17 +122,29 @@ def main():
             dataset = datasets.ImageFolder(ROOT / train_name, transforms.Compose(augment + normalise))
             loader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=0,
                                 generator=torch.Generator().manual_seed(seed))
-            model = models.mobilenet_v3_small(weights=models.MobileNet_V3_Small_Weights.IMAGENET1K_V1)
-            model.classifier[3] = nn.Linear(model.classifier[3].in_features, 4)
+            settings = NETWORK_VARIANTS.get(variant, dict(architecture="mobilenet_v3_small"))
+            architecture = settings["architecture"]
+            model = build_model(architecture, pretrained=architecture == "mobilenet_v3_small")
+            if settings.get("frozen"):
+                for parameter in model.parameters():
+                    parameter.requires_grad = False
+                for parameter in model.classifier[3].parameters():
+                    parameter.requires_grad = True
             model = model.to(device)
-            optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-            criterion = nn.CrossEntropyLoss()
+            optimizer = torch.optim.Adam((p for p in model.parameters() if p.requires_grad), lr=1e-3)
+            scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs) if settings.get("cosine") else None
+            criterion = nn.CrossEntropyLoss(label_smoothing=settings.get("smoothing", 0.))
             history = []
             best_score, best_loss = -1., float("inf")
             start = time.perf_counter()
             for epoch in range(args.epochs):
                 model.train()
+                if settings.get("frozen"):
+                    # Freeze BatchNorm statistics and dropout as well as weights.
+                    model.eval()
+                    model.classifier[3].train()
                 loss_sum = 0.
+                learning_rate = optimizer.param_groups[0]["lr"]
                 for images, labels in loader:
                     images, labels = images.to(device), labels.to(device)
                     optimizer.zero_grad()
@@ -131,17 +156,21 @@ def main():
                 # Equal weight to both data sources and to clean/camera-like views.
                 score = float(np.mean([m["balanced_accuracy"] for m in metrics.values()]))
                 val_loss = float(np.mean([m["cross_entropy"] for m in metrics.values()]))
-                history.append(dict(epoch=epoch + 1, train_loss=loss_sum / len(dataset), dev_score=score, metrics=metrics))
+                history.append(dict(epoch=epoch + 1, train_loss=loss_sum / len(dataset), dev_score=score, metrics=metrics, learning_rate=learning_rate))
                 if (score, -val_loss) > (best_score, -best_loss):
                     best_score, best_loss, best_epoch = score, val_loss, epoch + 1
                     best_state = copy.deepcopy({k: v.cpu() for k, v in model.state_dict().items()})
                 print(f"{variant} seed={seed} epoch={epoch+1:02d} loss={loss_sum/len(dataset):.4f} dev={score:.4f} elapsed={time.perf_counter()-start:.1f}s", flush=True)
+                if scheduler:
+                    scheduler.step()
             torch.save(best_state, checkpoint_path)
             result = dict(variant=variant, seed=seed, epochs=args.epochs, best_epoch=best_epoch,
                           best_dev_score=best_score, best_dev_loss=best_loss, train_count=len(dataset),
                           classes=dataset.classes, seconds=time.perf_counter() - start, device=str(device),
                           torch_version=torch.__version__, torchvision_version=__import__("torchvision").__version__,
-                          protocol_sha256=protocol_sha256, history=history)
+                          protocol_sha256=protocol_sha256, architecture=architecture, settings=settings,
+                          parameter_count=sum(p.numel() for p in model.parameters()),
+                          trainable_parameters=sum(p.numel() for p in model.parameters() if p.requires_grad), history=history)
             result_path.write_text(json.dumps(result, indent=2) + "\n")
             del model, optimizer
             if device.type == "mps":

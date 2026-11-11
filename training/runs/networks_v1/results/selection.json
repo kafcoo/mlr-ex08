@@ -1,0 +1,55 @@
+{
+  "criterion": "mean of four development balanced accuracies; variant mean over seeds; median seed",
+  "baseline_dev_score": 0.7997767925262451,
+  "variant_summaries": [
+    {
+      "variant": "leaf_bn_geo",
+      "mean_dev_score": 0.7367704212665558,
+      "std_dev_score": 0.006639952473284835,
+      "seeds": 3
+    },
+    {
+      "variant": "leaf_gap_geo",
+      "mean_dev_score": 0.6998573889334997,
+      "std_dev_score": 0.03155642778710399,
+      "seeds": 3
+    },
+    {
+      "variant": "leaf_geo",
+      "mean_dev_score": 0.6846292118231455,
+      "std_dev_score": 0.014772738126795078,
+      "seeds": 3
+    },
+    {
+      "variant": "mobile_cosine",
+      "mean_dev_score": 0.813560277223587,
+      "std_dev_score": 0.00406434593523639,
+      "seeds": 3
+    },
+    {
+      "variant": "mobile_frozen",
+      "mean_dev_score": 0.7948288669188818,
+      "std_dev_score": 0.0028889974214187427,
+      "seeds": 3
+    },
+    {
+      "variant": "mobile_geo",
+      "mean_dev_score": 0.8035342295964559,
+      "std_dev_score": 0.008023351549288791,
+      "seeds": 3
+    },
+    {
+      "variant": "mobile_smoothing",
+      "mean_dev_score": 0.8313988149166107,
+      "std_dev_score": 0.006559601765088801,
+      "seeds": 3
+    }
+  ],
+  "selected_variant": "mobile_smoothing",
+  "selected_seed": 0,
+  "selected_checkpoint": "mobile_smoothing_seed0.pt",
+  "selected_architecture": "mobilenet_v3_small",
+  "evaluation_scope": "development only; new phone test pending",
+  "deploy_candidate": true,
+  "baseline_sha256": "22bde880732116f01725c7b7d9bd58f14d7a5be62be593d3ad71657ebd9ad64a"
+}
